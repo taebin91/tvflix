@@ -1,0 +1,93 @@
+// ==UserScript==
+// @name         TVWIKI ALL-IN-ONE
+// @namespace    TVWIKI ALL-IN-ONE
+// @version      1.3
+// @description  TVWIKI 블랙 오버레이 + 광고 제거 및 UI 변경
+// @author       You
+// @match        https://tvwiki*.com/*
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    /** 1️⃣ 페이지 로드 전에 검은 장막 덮기 **/
+    let overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.backgroundColor = "black";
+    overlay.style.zIndex = "99999";  // 최상위 배치
+    overlay.style.transition = "opacity 0.5s";
+    overlay.style.opacity = "1";
+
+    // 전역 접근 가능하도록 저장
+    window.BlackOverlay = overlay;
+
+    // HTML 문서에 즉시 삽입 (페이지 로드 전에 실행됨)
+    document.documentElement.appendChild(overlay);
+
+    /** 2️⃣ 페이지 로드 후 실행될 코드 **/
+    window.addEventListener("DOMContentLoaded", function() {
+        console.log("페이지 로드 완료: 광고 제거 및 UI 변경 실행");
+
+        // 타이틀 변경
+        document.title = "Netflix";
+
+        // 로고 변경
+        const logoLink = document.querySelector("a.logo");
+        if (logoLink) {
+            const img = logoLink.querySelector("img");
+            if (img) {
+                img.src = "https://i.imgur.com/rBAwaXX.png";
+                img.style.width = "110px";
+                img.style.height = "auto";
+            }
+        }
+
+        // 메인 페이지 공지사항 제거
+        document.querySelectorAll('div.notice').forEach(div => div.remove());
+
+        // 메인 페이지 광고 제거
+        document.querySelectorAll('ul.banner2').forEach(ul => ul.remove());
+
+        // 컨텐츠 페이지 광고 제거
+        document.querySelectorAll('li.full.pc-only, li.full.mobile-only').forEach(li => li.remove());
+
+        // 상단 메뉴 (앱 다운로드 버튼 등) 제거
+        document.querySelectorAll('nav.gnb.sf-js-enabled.sf-arrows').forEach(nav => nav.remove());
+
+        // 상단 로그인 버튼 제거
+        document.querySelectorAll('a.btn_login').forEach(a => a.remove());
+
+        // 하단 공지사항 링크 제거
+        const bnb = document.getElementById('bnb');
+        if (bnb) bnb.remove();
+
+        // 하단 푸터 제거
+        const footer = document.getElementById('footer');
+        if (footer) footer.remove();
+
+        // 검색창 추천 검색어 제거
+        const searchList = document.querySelector('.search_wrap ul');
+        if (searchList) searchList.remove();
+
+        // 컨텐츠 내부 플레이어 자동 넘기기
+        let button = document.querySelector('a.btn.btn_normal');
+        if (button) {
+            button.click();
+        }
+
+        // 3️⃣ 오버레이 제거
+        if (window.BlackOverlay) {
+            window.BlackOverlay.style.opacity = "0";
+            setTimeout(() => {
+                window.BlackOverlay.remove();
+                window.BlackOverlay = null;
+            }, 500); // 0.5초 후 제거
+        }
+    });
+})();
