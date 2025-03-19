@@ -32,7 +32,6 @@
 
     /** 2️⃣ 페이지 로드 후 실행될 코드 **/
     window.addEventListener("DOMContentLoaded", function() {
-        console.log("페이지 로드 완료: 광고 제거 및 UI 변경 실행");
 
         // 타이틀 변경
         document.title = "Netflix";
@@ -42,43 +41,26 @@
         if (logoLink) {
             const img = logoLink.querySelector("img");
             if (img) {
-                img.src = "https://i.imgur.com/rBAwaXX.png";
+                img.src = "https://i.imgur.com/rBAwaXX.png"; // 이미지를 바로 변경
                 img.style.width = "110px";
                 img.style.height = "auto";
             }
         }
 
-        // 메인 페이지 공지사항 제거
-        document.querySelectorAll('div.notice').forEach(div => div.remove());
+        // 광고 및 UI 제거 (배너, 메뉴 등)
+        document.querySelectorAll('div.notice, ul.banner2, li.full.pc-only, li.full.mobile-only, nav.gnb.sf-js-enabled.sf-arrows, a.btn_login, #bnb, #footer, .search_wrap ul')
+            .forEach(element => element.remove());
 
-        // 메인 페이지 광고 제거
-        document.querySelectorAll('ul.banner2').forEach(ul => ul.remove());
-
-        // 컨텐츠 페이지 광고 제거
-        document.querySelectorAll('li.full.pc-only, li.full.mobile-only').forEach(li => li.remove());
-
-        // 상단 메뉴 (앱 다운로드 버튼 등) 제거
-        document.querySelectorAll('nav.gnb.sf-js-enabled.sf-arrows').forEach(nav => nav.remove());
-
-        // 상단 로그인 버튼 제거
-        document.querySelectorAll('a.btn_login').forEach(a => a.remove());
-
-        // 하단 공지사항 링크 제거
-        const bnb = document.getElementById('bnb');
-        if (bnb) bnb.remove();
-
-        // 하단 푸터 제거
-        const footer = document.getElementById('footer');
-        if (footer) footer.remove();
-
-        // 검색창 추천 검색어 제거
-        const searchList = document.querySelector('.search_wrap ul');
-        if (searchList) searchList.remove();
-
-        // 컨텐츠 내부 플레이어 자동 넘기기
-        let button = document.querySelector('a.btn.btn_normal');
+        // 자동 플레이어 넘기기
+        const button = document.querySelector('a.btn.btn_normal');
         if (button) {
             button.click();
+        }
+
+        // 추가: 컨텐츠 내부 동작 제거 (좋아요 공유 스크랩 등)
+        const bo_v_act = document.getElementById('bo_v_act');
+        if (bo_v_act) {
+            bo_v_act.remove();
         }
 
         // 3️⃣ 오버레이 제거
