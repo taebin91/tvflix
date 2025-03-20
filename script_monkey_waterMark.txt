@@ -1,0 +1,103 @@
+// ==UserScript==
+// @name         Video Watermark Blur (Detect Letterbox + Pause Check)
+// @namespace    http://tampermonkey.net/
+// @version      1.4
+// @description  동영상 현재 시간에 따라 모자이크 ON/OFF + 레터박스 감지 + 일시정지 고려
+// @author       You
+// @match        *://player.bunny-frame.online/*
+// @grant        GM_addStyle
+// ==/UserScript==
+
+GM_addStyle(`
+  /* 모자이크 기본 스타일 */
+  .watermark-blur {
+    position: absolute;
+    width: 80px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    pointer-events: none;
+    display: none; /* 기본적으로 숨김 */
+  }
+`);
+
+(function() {
+    'use strict';
+
+    function applyBlurOverlay(video) {
+        if (!video) return;
+
+        let blurDiv = document.createElement('div');
+        blurDiv.className = "watermark-blur";
+        video.parentElement.appendChild(blurDiv); // 동영상 컨테이너에 추가
+
+
+      function updateOverlay() {
+            let rect = video.getBoundingClientRect();
+
+            // 동영상 컨테이너 기준 상대적 위치 계산
+            let videoWidth = rect.width;
+            let videoHeight = rect.height;
+
+            // 전체화면 감지
+            let isFullscreen = document.fullscreenElement === video.parentElement;
+
+            if (isFullscreen) {
+                blurDiv.style.position = "fixed"; // 전체화면일 때는 fixed 사용
+                blurDiv.style.top = "10px";
+                blurDiv.style.right = "32px";
+                blurDiv.style.backdropFilter = "blur(7px)";
+            } else {
+                blurDiv.style.position = "absolute"; // 일반 모드에서는 absolute
+                blurDiv.style.top = "10px";
+                blurDiv.style.right = "20px";
+                blurDiv.style.backdropFilter = "blur(4px)";
+            }
+
+            blurDiv.style.width = videoWidth * 0.06 + "px"; // 크기 조절
+            blurDiv.style.height = videoHeight * 0.09 + "px";
+        }
+
+        function checkLetterbox() {
+            // 동영상 높이와 실제 표시되는 높이 비교 (레터박스가 있으면 clientHeight가 더 작음)
+
+        }
+
+        function checkVideoTime() {
+            if (video.currentTime < 181) {
+                // 3분 1초 미만: 모자이크 표시
+                blurDiv.style.display = "block";
+                updateOverlay();
+                checkLetterbox();
+            } else {
+                // 3분 1초 이상일 때: 일시정지 상태면 그대로 유지, 재생 중이면 숨김
+                if (!video.paused) {
+                    blurDiv.style.display = "none";
+                }
+            }
+        }
+
+        updateOverlay(); // 초기 위치 설정
+        checkLetterbox(); // 레터박스 감지
+
+        // 이벤트 리스너 추가
+        window.addEventListener("resize", updateOverlay);
+        document.addEventListener("fullscreenchange", updateOverlay);
+        video.addEventListener("loadedmetadata", updateOverlay);
+        video.addEventListener("timeupdate", checkVideoTime); // 현재 시간 감지
+        video.addEventListener("play", checkLetterbox); // 동영상 재생 시 레터박스 체크
+        video.addEventListener("pause", checkVideoTime); // 일시정지 감지
+    }
+
+    function waitForVideo() {
+        let video = document.querySelector("video");
+        if (video) {
+            applyBlurOverlay(video);
+        } else {
+            setTimeout(waitForVideo, 500);
+        }
+    }
+
+    waitForVideo();
+})();
