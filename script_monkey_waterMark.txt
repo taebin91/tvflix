@@ -43,17 +43,16 @@ GM_addStyle(`
             // 전체화면 감지
             let isFullscreen = document.fullscreenElement === video.parentElement;
 
+            blurDiv.style.position = "absolute";
+
             if (isFullscreen) {
-                blurDiv.style.position = "fixed"; // 전체화면일 때는 fixed 사용
-                blurDiv.style.top = "10px";
-                blurDiv.style.right = "32px";
                 blurDiv.style.backdropFilter = "blur(7px)";
             } else {
-                blurDiv.style.position = "absolute"; // 일반 모드에서는 absolute
-                blurDiv.style.top = "10px";
-                blurDiv.style.right = "20px";
                 blurDiv.style.backdropFilter = "blur(4px)";
             }
+
+            blurDiv.style.top = videoHeight * 0.015 + "px";
+            blurDiv.style.right = videoWidth * 0.02 + "px";
 
             blurDiv.style.width = videoWidth * 0.06 + "px"; // 크기 조절
             blurDiv.style.height = videoHeight * 0.09 + "px";
