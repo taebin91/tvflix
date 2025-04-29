@@ -3,21 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web App</title>
-
-    <!-- Manifest 링크 추가 -->
-    <link rel="manifest" href="/manifest.json">
-
-    <!-- 서비스 워커 등록 (오프라인 기능 등) -->
+    <title>Redirecting...</title>
+    <meta http-equiv="refresh" content="0; url=https://tvwiki20.com">
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                console.log('Service Worker registered with scope: ', registration.scope);
-            }).catch(function(error) {
-                console.log('Service Worker registration failed: ', error);
-            });
-        }
+        window.location.replace("https://tvwiki20.com"); 
     </script>
 </head>
-
 </html>
