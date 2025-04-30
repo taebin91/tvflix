@@ -1,13 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>내 웹앱</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- iOS PWA 설정 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <title>내 PWA 포털</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#ffffff">
+
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h1>내 웹앱</h1>
-  <a href="https://m.youtube.com" target="_blank" rel="noopener noreferrer">원하는 사이트 열기</a>
+  <h1>사이트로 이동하기</h1>
+  <button onclick="goToSite()">이동</button>
+
+  <script>
+    function goToSite() {
+      window.location.href = "https://m.youtube.com";
+    }
+  </script>
 </body>
 </html>
