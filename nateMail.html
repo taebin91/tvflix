@@ -1,33 +1,56 @@
-i<!DOCTYPE html>
+ 아래는 <iframe>을 제거하고, 사용자가 링크를 클릭하면 https://tvwiki20.com으로 이동하도록 수정한 코드입니다:
+
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>내 웹앱</title>
+  <title>TvFlix</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="0; url=https://mail.nate.com">
-    <script>
-        window.location.replace("https://mail.nate.com"); 
-    </script>
+
   <!-- iOS PWA 설정 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Netflix 아이콘 설정 -->
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg">
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    a {
+      color: #ffffff;
+      font-size: 1.5em;
+      text-decoration: none;
+      border: 2px solid #ffffff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+
+    a:hover {
+      background-color: #ffffff;
+      color: #000000;
     }
   </style>
 </head>
-
+<body>
+  <a href="https://tvwiki20.com">TvFlix 바로가기</a>
+</body>
 </html>
+
+이제 페이지에 접속하면 “TvFlix 바로가기” 버튼이 가운데에 표시되고, 클릭 시 해당 사이트로 이동합니다. 디자인이나 동작을 추가로 원하시면 말씀해주세요.
 
