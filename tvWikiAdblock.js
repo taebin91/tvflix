@@ -181,4 +181,7 @@ document.querySelectorAll('div.notice, ul.banner2, li.full.pc-only, li.full.mobi
 	
 replaceIcons();
 
+Unity.call("SCRIPT_READY");
+
 })();
+
