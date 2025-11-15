@@ -17,7 +17,7 @@
     function init() {
 
         // 전체 화면
-        try { document.documentElement.requestFullscreen(); } catch(e){}
+        //try { document.documentElement.requestFullscreen(); } catch(e){}
 
         // ------------------------------
         // 상단 공지/메인 문구/팝업 제거
