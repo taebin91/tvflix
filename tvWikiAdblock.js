@@ -180,4 +180,10 @@ document.querySelectorAll('div.notice, ul.banner2, li.full.pc-only, li.full.mobi
 	
 replaceIcons();
 
+	
+if (typeof Unity !== "undefined" && Unity.call) {
+	Unity.call("SCRIPT_READY");
+}
+
 })();
+
