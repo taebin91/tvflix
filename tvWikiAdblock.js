@@ -31,6 +31,11 @@ document.querySelectorAll('.top_btn').forEach(element => {
     element.remove();
 });
 
+// 에피소드 등록일 삭제
+document.querySelectorAll('.profile_info_ct').forEach(element => {
+    element.remove();
+});
+
 // 에피소드 검색 삭제
 document.querySelectorAll('.ep_search').forEach(element => {
     element.remove();
