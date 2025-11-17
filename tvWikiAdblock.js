@@ -24,6 +24,17 @@ document.querySelectorAll('.notice').forEach(element => {
 // 상단 카테고리 메뉴 삭제
 document.querySelectorAll('.gnb_mobile').forEach(element => {
     element.remove();
+});
+
+// 위로가기 버튼 삭제
+document.querySelectorAll('.top_btn').forEach(element => {
+    element.remove();
+});
+
+// 에피소드 검색 삭제
+document.querySelectorAll('.ep_search').forEach(element => {
+    element.remove();
+});
 
 // 메인 문구 삭제
 document.querySelectorAll('.emer-content').forEach(element => {
@@ -93,7 +104,7 @@ document.querySelectorAll('.video-remote').forEach(element => {
 // 배너 이미지 삭제
 (function() {
     'use strict';
-	
+
 	//아이콘 변경 함수
     const faviconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
     const appleIconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
@@ -131,8 +142,8 @@ document.querySelectorAll('.video-remote').forEach(element => {
     // 동적으로 로드되는 배너(예: Ajax, SPA)를 감지해서 계속 적용
     const observer = new MutationObserver(hideBannerImages);
     observer.observe(document.body, { childList: true, subtree: true });
-	
-	
+
+
 // 타이틀 변경
 document.title = "Netflix";
 
@@ -174,14 +185,13 @@ if (bottom_float) {
 // 광고 및 UI 제거 (배너, 메뉴 등)
 document.querySelectorAll('div.notice, ul.banner2, li.full.pc-only, li.full.mobile-only, nav.gnb.sf-js-enabled.sf-arrows, a.btn_login, #bnb, #footer, .search_wrap ul')
 	.forEach(element => element.remove());
-	
+
 replaceIcons();
 
-	
+
 if (typeof Unity !== "undefined" && Unity.call) {
 	Unity.call("SCRIPT_READY");
 }
 
 })();
-
 
