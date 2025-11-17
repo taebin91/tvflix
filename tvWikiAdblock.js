@@ -21,16 +21,13 @@ document.querySelectorAll('.notice').forEach(element => {
     element.remove();
 });
 
+// 상단 카테고리 메뉴 삭제
+document.querySelectorAll('.gnb_mobile').forEach(element => {
+    element.remove();
+
 // 메인 문구 삭제
 document.querySelectorAll('.emer-content').forEach(element => {
     element.remove();
-});
-
-// 상단 메뉴 높이 수정
-document.getElementById('header').style.height = '80px';
-
-document.querySelectorAll('.top-menus').forEach(element => {
-    element.style.height = '150px';
 });
 
 // 컨테이너 제목 높이 수정
@@ -186,4 +183,5 @@ if (typeof Unity !== "undefined" && Unity.call) {
 }
 
 })();
+
 
