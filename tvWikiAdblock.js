@@ -21,6 +21,11 @@ document.querySelectorAll('.notice').forEach(element => {
     element.remove();
 });
 
+// 홈으로 로고배너 삭제
+document.querySelectorAll('.logo').forEach(element => {
+    element.remove();
+});
+
 // 상단 카테고리 메뉴 삭제
 document.querySelectorAll('.gnb_mobile').forEach(element => {
     element.remove();
@@ -38,6 +43,11 @@ document.querySelectorAll('.profile_info_ct').forEach(element => {
 
 // 에피소드 검색 삭제
 document.querySelectorAll('.ep_search').forEach(element => {
+    element.remove();
+});
+
+// 홈화면 좋아요 수 삭제
+document.querySelectorAll('.good').forEach(element => {
     element.remove();
 });
 
