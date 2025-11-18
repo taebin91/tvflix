@@ -1,151 +1,97 @@
-/**
- * tvWikiMarkblock.js
- * * 목적: Android TV WebView 환경에서 키보드 이벤트(특히 DPAD)를 가로채어
- * 특정 iframe (Video.js 플레이어)에 맞게 동작을 재매핑합니다.
- * - DPAD Center (66)를 Video.js Hotkeys 플러그인의 전체 화면 키 (F/70)로 매핑합니다.
- * - DPAD 좌우 (37, 39)를 Video.js의 건너뛰기/되감기 기능으로 매핑합니다.
- * * 참고: 이 스크립트는 Android TV 앱의 WebView에 주입되어야 합니다.
- */
+// tvWikiMarkblock.js
+// 이 스크립트는 'iframeUrl'로 격리된 페이지(비디오 플레이어)에 주입됩니다.
+// 주요 목적: 플레이어 UI를 정리하고, 전체 화면 기능을 안정화합니다.
 
-// ---------------------------------------------------
-// [1] 환경 설정
-// ---------------------------------------------------
+(function() {
+    console.log("tvWikiMarkblock.js: 플레이어 페이지 스크립트 실행됨.");
 
-// 플레이어를 포함하는 iframe의 ID입니다. 실제 환경에 맞게 수정해야 합니다.
-const IFRAME_ID = 'view_iframe';
-
-// DPAD Center (66) 키를 플레이어가 아닌 다른 요소에서 누르면 작동을 막는 플래그입니다.
-let isPlayerFocusedFlag = false; 
-
-/**
- * 현재 포커스가 플레이어 iframe에 있는지 확인합니다.
- * @returns {boolean}
- */
-function isPlayerFocused() {
-    const activeElement = document.activeElement;
-    const playerIframe = document.getElementById(IFRAME_ID);
+    // ==============================================================
+    // 1. 전체 화면 권한 강제 부여 (DOMException, SOP violation 해결)
+    // ==============================================================
     
-    // 이 환경에서는 iframe 자체가 포커스를 받거나, iframe이 화면의 주요 콘텐츠일 때 true로 간주합니다.
-    return (activeElement && activeElement.id === IFRAME_ID) || isPlayerFocusedFlag;
-}
+    // **함수 정의:** Video.js의 전체 화면 버튼을 찾아 클릭합니다.
+    window.togglePlayerFullscreen = function() {
+        // Video.js의 전체 화면 컨트롤 버튼 선택자
+        const fullscreenButton = document.querySelector('.vjs-fullscreen-control.vjs-button');
+        
+        if (fullscreenButton) {
+            fullscreenButton.click();
+            console.log("togglePlayerFullscreen: Video.js 전체 화면 버튼 클릭 성공.");
+            return true;
+        }
 
-// ---------------------------------------------------
-// [2] 이벤트 핸들러 및 키 매핑 로직
-// ---------------------------------------------------
-
-/**
- * 키 다운 이벤트를 처리하고 Video.js 플레이어의 동작을 제어합니다.
- * @param {KeyboardEvent} event 
- */
-function handleKeydown(event) {
-    const keyCode = event.keyCode;
-    
-    // 입력 필드나 텍스트 영역에서는 키 이벤트를 가로채지 않습니다.
-    const tagName = (event.target || event.srcElement).tagName;
-    if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT') {
-        return false;
-    }
-    
-    const playerIframe = document.getElementById(IFRAME_ID);
-    if (!playerIframe) {
-        // console.error("Player iframe not found with ID:", IFRAME_ID);
-        return false;
-    }
-
-    let handled = false;
-
-    switch (keyCode) {
-        case 66: // DPAD Center (Enter)
-            if (isPlayerFocused()) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                // Hotkeys 플러그인의 전체 화면 키인 'F' 키(70) 이벤트를 생성합니다.
-                // 이 이벤트를 iframe으로 보내서 Hotkeys 플러그인이 잡도록 합니다.
-                var fKeydownEvent = new KeyboardEvent('keydown', {
-                    keyCode: 70, // F key code
-                    which: 70,
-                    bubbles: true,
-                    cancelable: true
-                });
-
-                // iframe 요소 자체에 이벤트를 전달하여 iframe 내부의 DOM 트리에 전파를 기대합니다.
-                // NOTE: 크로스-도메인 제약으로 인해 contentDocument에 직접 접근할 수 없으므로,
-                // 이 방법이 최선의 우회책입니다.
-                playerIframe.dispatchEvent(fKeydownEvent);
-                
-                // console.log("DPAD Center (66) converted to F key (70) event for fullscreen toggle.");
-                handled = true; 
+        // 비디오 태그 자체에 requestFullscreen을 시도 (Video.js가 없는 경우 대비)
+        const videoElement = document.querySelector('video');
+        if (videoElement) {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                console.log("togglePlayerFullscreen: document.exitFullscreen() 호출.");
+                return true;
+            } else {
+                // 비디오 요소가 requestFullscreen()을 지원하는지 확인
+                if (typeof videoElement.requestFullscreen === 'function') {
+                    videoElement.requestFullscreen().catch(err => {
+                        console.error("togglePlayerFullscreen: 비디오 요소 requestFullscreen 실패:", err);
+                    });
+                    console.log("togglePlayerFullscreen: 비디오 요소 requestFullscreen() 호출.");
+                    return true;
+                }
             }
-            break;
+        }
+        
+        console.warn("togglePlayerFullscreen: 전체 화면 토글 요소를 찾지 못했습니다.");
+        return false;
+    };
 
-        case 37: // DPAD Left (되감기)
-        case 39: // DPAD Right (빨리 감기)
-        case 38: // DPAD Up (볼륨 높이기)
-        case 40: // DPAD Down (볼륨 낮추기)
-            if (isPlayerFocused()) {
-                // 이 키들은 videojs.hotkeys 플러그인이 자체적으로 처리할 수 있도록 
-                // 이벤트를 iframe에 직접 전달하여 기본 동작을 활용합니다.
-                event.preventDefault(); // 웹뷰 기본 스크롤/포커스 이동 방지
-                event.stopPropagation();
 
-                // 기존 이벤트를 복사하여 iframe으로 전달
-                const clonedEvent = new KeyboardEvent(event.type, {
-                    keyCode: keyCode,
-                    which: keyCode,
-                    bubbles: true,
-                    cancelable: true
-                });
-                playerIframe.dispatchEvent(clonedEvent);
-                
-                handled = true;
-            }
-            break;
+    const rootElements = [document.documentElement, document.body];
+    
+    rootElements.forEach(el => {
+        if (el) {
+            // 'allowfullscreen'은 오래된 방식이지만, 호환성을 위해 추가
+            el.setAttribute('allowfullscreen', 'true');
+            console.log(`Added allowfullscreen="true" to ${el.tagName}.`);
             
-        // case 13: // Keyboard Enter (DPAD Center와 겹칠 수 있으므로 일단 무시하거나 필요한 동작으로 매핑)
-        //     // ... (필요 시 로직 추가)
-        //     break;
+            // 'allow' 속성은 최신 표준이며, fullscreen 권한을 명시적으로 요구합니다.
+            // 이미 'allow' 속성이 있다면, 'fullscreen'을 추가합니다.
+            let currentAllow = el.getAttribute('allow') || '';
+            if (!currentAllow.includes('fullscreen')) {
+                let newAllow = currentAllow.split(';').filter(a => a.trim() && !a.trim().startsWith('fullscreen')).join('; ');
+                newAllow = newAllow.trim();
+                newAllow += (newAllow ? '; ' : '') + 'fullscreen';
+                el.setAttribute('allow', newAllow);
+                console.log(`Updated allow attribute on ${el.tagName} to include fullscreen: ${newAllow}`);
+            } else {
+                console.log(`${el.tagName} already allows fullscreen.`);
+            }
+        }
+    });
 
-        default:
-            // 그 외 키는 기본 동작을 허용하거나, 필요에 따라 추가 매핑합니다.
-            break;
-    }
+    // ==============================================================
+    // 2. 비디오 플레이어 주변 요소 정리 (여백 및 불필요한 스크롤 방지)
+    // ==============================================================
 
-    return handled;
-}
+    // 페이지의 모든 스크롤바를 제거하고 여백을 없앱니다. (MainActivity.kt에서도 처리하지만, JS에서 한 번 더 보장)
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
-// ---------------------------------------------------
-// [3] 초기화 및 이벤트 리스너 등록
-// ---------------------------------------------------
+    // Video.js 등의 플레이어가 생성하는 컨테이너를 화면에 꽉 차게 조정합니다.
+    // 'video' 태그나 'vjs-tech' 클래스를 가진 요소를 찾습니다.
+    const videoElements = document.querySelectorAll('video, .vjs-tech');
+    
+    videoElements.forEach(video => {
+        // 비디오 요소의 부모 컨테이너를 화면에 꽉 채우도록 설정
+        let parent = video.parentElement;
+        while (parent && parent.tagName !== 'BODY') {
+            parent.style.width = '100%';
+            parent.style.height = '100%';
+            parent.style.position = 'relative'; // 또는 'absolute'
+            parent = parent.parentElement;
+        }
+    });
 
-/**
- * iframe이 로드되었을 때 포커스를 처리하는 함수
- */
-function setupIframeFocus() {
-    const playerIframe = document.getElementById(IFRAME_ID);
-    if (playerIframe) {
-        // iframe 클릭 시 포커스 플래그를 true로 설정하여 키 이벤트 처리를 활성화
-        playerIframe.addEventListener('click', () => {
-            isPlayerFocusedFlag = true;
-            // console.log('Player Focused: true');
-        });
-        
-        // 상위 document에서 포커스가 벗어나면 플래그를 false로 설정 (선택 사항)
-        // document.addEventListener('click', (e) => {
-        //     if (e.target.id !== IFRAME_ID) {
-        //         isPlayerFocusedFlag = false;
-        //         // console.log('Player Focused: false');
-        //     }
-        // });
-        
-        // 페이지 로드 시 iframe이 준비되면 포커스 플래그를 true로 초기 설정 (TV 환경 가정)
-        // 실제 환경에 따라 이 초기 설정은 달라질 수 있습니다.
-        isPlayerFocusedFlag = true;
-    }
-}
+    console.log("tvWikiMarkblock.js: 스크립트 작업 완료.");
 
-// 전역 키다운 이벤트 리스너 등록
-window.addEventListener('keydown', handleKeydown, true);
-window.addEventListener('load', setupIframeFocus);
-
-// console.log('tvWikiMarkblock.js loaded and keydown handler attached.');
+})();
