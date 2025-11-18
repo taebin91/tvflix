@@ -54,7 +54,7 @@
 
             /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
 
-            outline: 20px solid #FFD700 !important;
+            outline: 8px solid #FFD700 !important;
 
             outline-offset: 0px !important;
 
@@ -64,9 +64,9 @@
 
             box-shadow:
 
-                0 0 0 16px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
+                0 0 0 8px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
 
-                0 0 30px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
+                0 0 15px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
 
 
 
