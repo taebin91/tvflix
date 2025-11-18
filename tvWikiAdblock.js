@@ -15,39 +15,54 @@
     console.log('TV User Script (tvWikiAdblock.js) loaded and running.');
 
     // =======================================================
-    // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 로직
-    // - TV 환경에서 포커스 이동 시 테두리가 잘 보이도록 색상과 굵기 조정
+    // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 로직 (가려짐 방지 개선)
+    // - TV 환경에서 포커스 이동 시 테두리가 잘 보이도록 색상, 굵기 조정 및 Z-index 적용
     // =======================================================
     const style = document.createElement('style');
     style.innerHTML = `
-        /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
+        /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 및 가려짐 방지 */
         :focus {
-            outline: 5px solid #FFD700 !important; /* 밝은 노란색 (Gold) 굵기 5px */
-            outline-offset: 4px !important; /* 요소의 경계선과 아웃라인 사이의 간격 */
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7) !important; /* 테두리 주변에 부드러운 빛 효과 추가 */
+            /* 포커스된 요소가 다른 요소 위에 표시되도록 강제로 레이어 올림 */
+            position: relative !important;
+            z-index: 9999 !important;
+
+            /* 밝은 노란색 (Gold) 굵기 5px 외부 아웃라인 유지 */
+            outline: 5px solid #FFD700 !important;
+            outline-offset: 4px !important;
+
+            /* 내부 그림자(inset)를 추가하여 요소 경계 내에 포커스 표시를 보장 */
+            /* 외부 그림자도 유지하여 빛 효과 강화 */
+            box-shadow: 
+                0 0 0 4px #FFD700 inset, /* 내부 그림자로 요소가 잘려도 경계 안에 표시 */
+                0 0 10px rgba(255, 215, 0, 0.9) !important; /* 외부 빛 효과 */
+
             transition: outline-color 0.2s, outline-offset 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
         }
-
+        
         /* Video.js와 같이 특정 클래스를 사용하는 플레이어의 컨트롤에도 강제로 적용 */
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
         .vjs-control-bar :focus {
              outline: 5px solid #FFD700 !important;
              outline-offset: 4px !important;
+             position: relative !important;
+             z-index: 9999 !important;
         }
 
         /* 포커스가 갇히는 것을 방지하기 위해 iframe 자체에는 포커스 스타일을 적용하지 않음 */
         iframe:focus {
             outline: none !important;
             box-shadow: none !important;
+            position: static !important;
+            z-index: auto !important;
         }
     `;
     document.head.appendChild(style);
-    console.log('Focus style improved: Bright yellow outline injected.');
+    console.log('Focus style improved: Bright yellow outline injected with visibility fix (z-index/inset-shadow).');
 
 
     // =======================================================
-    // 2. UI 정리 및 스타일 조정 로직 (사용자 제공)
+    // 2. UI 정리 및 스타일 조정 로직
     // =======================================================
 
     // 자동 풀스크린 요청 (TV 환경에서 필요할 수 있음)
@@ -69,6 +84,7 @@
         element.setAttribute('tabindex', '-1');
     });
     console.log('Disabled focus for all <a> tags with class "title".');
+
 
     // 제거할 UI 요소
     const elementsToRemove = [
