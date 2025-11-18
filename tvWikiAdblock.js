@@ -92,11 +92,16 @@
         }
     });
 
-    // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    // 클래스가 'img'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
     document.querySelectorAll('a.img').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
-    console.log('Disabled focus for all <a> tags with class "title".');
+
+    // 클래스가 'lazy'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    document.querySelectorAll('a.lazy').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
+
 
 
     // 제거할 UI 요소
