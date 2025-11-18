@@ -28,22 +28,22 @@
 
             /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
             outline: 8px solid #FFD700 !important;
-            outline-offset: 0px !important;
+            outline-offset: 0px !important; 
 
             /* 박스 그림자: 내부 그림자(inset)를 굵게 설정하여 요소가 잘려도 경계 안에 확실히 포커스 표시 */
             /* 외부 빛 효과도 더 강하게 설정 */
-            box-shadow:
+            box-shadow: 
                 0 0 0 8px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
                 0 0 15px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
 
             transition: outline-color 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
         }
-
+        
         /* Video.js와 같이 특정 클래스를 사용하는 플레이어의 컨트롤에도 강제로 적용 */
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
         .vjs-control-bar :focus {
-             outline: 5px solid #FFD700 !important;
+             outline: 8px solid #FFD700 !important;
              outline-offset: 0px !important;
              position: relative !important;
              z-index: 9999 !important;
@@ -65,25 +65,44 @@
     // 2. UI 정리 및 스타일 조정 로직
     // =======================================================
 
-    // 자동 풀스크린 요청 (TV 환경에서 필요할 수 있음)
-    document.addEventListener('DOMContentLoaded', function() {
-        // 실제 실행 환경(Android WebView)에서는 이 DOMContentLoaded가 pageFinished 이후에 발생하지 않을 수 있습니다.
-        // 하지만 혹시 모를 상황에 대비하여 유지합니다.
-        // document.documentElement.requestFullscreen(); // WebView 내에서는 OS 수준에서 자동 처리되므로 제거 또는 주석 처리 권장
+    // 홈화면의 첫 번째 '.slide_wrap' 제거 (기존 로직)
+    const firstSlideWrap = document.querySelector('.slide_wrap');
+    if (firstSlideWrap) {
+        firstSlideWrap.remove();
+        console.log('Removed the first .slide_wrap element.');
+    }
+
+    // 2.1 남은 Slide Wrap 제목 변경 로직 (새로운 로직)
+    const slideWraps = document.querySelectorAll('.slide_wrap');
+    const newTitles = ['드라마', '영화', '예능', '애니메이션'];
+
+    slideWraps.forEach((wrap, index) => {
+        // 남은 랩퍼 중 처음 4개(원래 2, 3, 4, 5번째)만 대상으로 지정
+        if (index < newTitles.length) {
+            const h2 = wrap.querySelector('h2');
+            if (h2) {
+                // "전체보기" <a> 태그를 찾아 저장하여 유지
+                const moreLink = h2.querySelector('a.more');
+                const newTitleText = newTitles[index];
+                
+                if (moreLink) {
+                    // 새로운 제목 텍스트와 원본 <a> 태그를 결합하여 innerHTML 재설정
+                    h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
+                    console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
+                } else {
+                    // <a> 태그가 없으면 제목만 설정
+                    h2.textContent = newTitleText;
+                    console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
+                }
+            }
+        }
     });
 
-    // 홈화면의 첫 번째 '.slide_wrap' 제거
-    const firstSlideWrap = document.querySelector('.slide_wrap');
-    if (firstSlideWrap) {
-        firstSlideWrap.remove();
-        console.log('Removed the first .slide_wrap element.');
-    }
-
-    // 클래스가 'img'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
-    document.querySelectorAll('a.img').forEach(element => {
-        element.setAttribute('tabindex', '-1');
-    });
-    console.log('Disabled focus for all <a> tags with class "title".');
+    // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    document.querySelectorAll('a.title').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
+    console.log('Disabled focus for all <a> tags with class "title".');
 
 
     // 제거할 UI 요소
