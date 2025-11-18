@@ -8,10 +8,42 @@
     // ==============================================================
     // 1. 전체 화면 권한 강제 부여 (DOMException, SOP violation 해결)
     // ==============================================================
+    
+    // **함수 정의:** Video.js의 전체 화면 버튼을 찾아 클릭합니다.
+    window.togglePlayerFullscreen = function() {
+        // Video.js의 전체 화면 컨트롤 버튼 선택자
+        const fullscreenButton = document.querySelector('.vjs-fullscreen-control.vjs-button');
+        
+        if (fullscreenButton) {
+            fullscreenButton.click();
+            console.log("togglePlayerFullscreen: Video.js 전체 화면 버튼 클릭 성공.");
+            return true;
+        }
 
-    // **중요:** HTML, BODY 태그에 전체 화면 권한을 부여합니다.
-    // 이는 이 스크립트가 로드되는 현재 문서(플레이어 페이지)에 전체 화면 권한을 강제로 부여하여,
-    // 내부 비디오 플레이어가 requestFullscreen()을 호출할 수 있도록 합니다.
+        // 비디오 태그 자체에 requestFullscreen을 시도 (Video.js가 없는 경우 대비)
+        const videoElement = document.querySelector('video');
+        if (videoElement) {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+                console.log("togglePlayerFullscreen: document.exitFullscreen() 호출.");
+                return true;
+            } else {
+                // 비디오 요소가 requestFullscreen()을 지원하는지 확인
+                if (typeof videoElement.requestFullscreen === 'function') {
+                    videoElement.requestFullscreen().catch(err => {
+                        console.error("togglePlayerFullscreen: 비디오 요소 requestFullscreen 실패:", err);
+                    });
+                    console.log("togglePlayerFullscreen: 비디오 요소 requestFullscreen() 호출.");
+                    return true;
+                }
+            }
+        }
+        
+        console.warn("togglePlayerFullscreen: 전체 화면 토글 요소를 찾지 못했습니다.");
+        return false;
+    };
+
+
     const rootElements = [document.documentElement, document.body];
     
     rootElements.forEach(el => {
