@@ -43,7 +43,7 @@
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
         .vjs-control-bar :focus {
-             outline: 50px solid #FFD700 !important;
+             outline: 5px solid #FFD700 !important;
              outline-offset: 0px !important;
              position: relative !important;
              z-index: 9999 !important;
