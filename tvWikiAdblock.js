@@ -1,22 +1,21 @@
 // ==UserScript==
 // @name         tvFlixOtt
 // @namespace    https://xlqldnlzl.site
-// @version      20251115
-// @description  tvFlixOtt
+// @version      20251118
+// @description  tvFlixOtt - 메인 페이지 UI 정리 및 포커스 개선
 // @author       Unknown
 
-// @include      /^https?:\/\/[^/]*tvwiki[^/]*\/.*$/
+// @include      /^https?:\/\/[^/]*tvwiki[^/]*\/.*$/ 
 // @icon         https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
-    console.log('TV User Script (tvWikiAdblock.js) loaded and running.');
+    console.log('TV User Script (tvWikiAdblock.js) loaded and running (Main Page Only).');
 
     // =======================================================
     // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 로직 (최대 가시성 확보)
-    // - 포커스 아웃라인이 다른 요소에 의해 가려지거나 잘리는 현상을 강제 방지
     // =======================================================
     const style = document.createElement('style');
     style.innerHTML = `
@@ -28,17 +27,16 @@
 
             /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
             outline: 8px solid #FFD700 !important;
-            outline-offset: 0px !important;
+            outline-offset: 0px !important; 
 
             /* 박스 그림자: 내부 그림자(inset)를 굵게 설정하여 요소가 잘려도 경계 안에 확실히 포커스 표시 */
-            /* 외부 빛 효과도 더 강하게 설정 */
-            box-shadow:
+            box-shadow: 
                 0 0 0 8px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
                 0 0 15px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
 
             transition: outline-color 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
         }
-
+        
         /* Video.js와 같이 특정 클래스를 사용하는 플레이어의 컨트롤에도 강제로 적용 */
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
@@ -49,7 +47,7 @@
              z-index: 9999 !important;
         }
 
-        /* 포커스가 갇히는 것을 방지하기 위해 iframe 자체에는 포커스 스타일을 적용하지 않음 */
+        /* iFrame 자체 포커스 스타일 제거 (포커스 갇힘 방지) */
         iframe:focus {
             outline: none !important;
             box-shadow: none !important;
@@ -58,39 +56,35 @@
         }
     `;
     document.head.appendChild(style);
-    console.log('Focus style improved: Aggressive 8px outline and inset shadow applied for maximum visibility.');
+    console.log('Focus style improved: Aggressive 8px outline and inset shadow applied.');
 
 
     // =======================================================
-    // 2. UI 정리 및 스타일 조정 로직
+    // 2. 메인 페이지 (tvwiki) UI 정리 및 스타일 조정 로직
     // =======================================================
-
-    // 홈화면의 첫 번째 '.slide_wrap' 제거 (기존 로직)
+    
+    // 홈화면의 첫 번째 '.slide_wrap' 제거
     const firstSlideWrap = document.querySelector('.slide_wrap');
     if (firstSlideWrap) {
         firstSlideWrap.remove();
         console.log('Removed the first .slide_wrap element.');
     }
 
-    // 2.1 남은 Slide Wrap 제목 변경 로직 (새로운 로직)
+    // 남은 Slide Wrap 제목 변경 로직
     const slideWraps = document.querySelectorAll('.slide_wrap');
     const newTitles = ['드라마', '영화', '예능', '애니메이션'];
 
     slideWraps.forEach((wrap, index) => {
-        // 남은 랩퍼 중 처음 4개(원래 2, 3, 4, 5번째)만 대상으로 지정
         if (index < newTitles.length) {
             const h2 = wrap.querySelector('h2');
             if (h2) {
-                // "전체보기" <a> 태그를 찾아 저장하여 유지
                 const moreLink = h2.querySelector('a.more');
                 const newTitleText = newTitles[index];
-
+                
                 if (moreLink) {
-                    // 새로운 제목 텍스트와 원본 <a> 태그를 결합하여 innerHTML 재설정
                     h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
                     console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
                 } else {
-                    // <a> 태그가 없으면 제목만 설정
                     h2.textContent = newTitleText;
                     console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
                 }
@@ -98,8 +92,8 @@
         }
     });
 
-    // 클래스가 'img'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
-    document.querySelectorAll('a.img').forEach(element => {
+    // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    document.querySelectorAll('a.title').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
     console.log('Disabled focus for all <a> tags with class "title".');
@@ -107,30 +101,11 @@
 
     // 제거할 UI 요소
     const elementsToRemove = [
-        '.notice',          // 상단 공지
-        '.logo',            // 홈으로 로고배너
-        '.gnb_mobile',      // 상단 카테고리 메뉴
-        '.top_btn',         // 위로가기 버튼
-        '.profile_info_ct', // 에피소드 등록일
-        '.ep_search',       // 에피소드 검색
-        '.good',            // 홈화면 좋아요 수
-        '.emer-content',    // 메인 문구
-        '#bo_v_atc',        // 재생 플레이어 줄거리
-        '.cast',            // 재생 플레이어 배우
-        '.view-comment-area', // 재생 플레이어 댓글
-        '.over',            // 재생 전 공지사항 팝업
-        '#bo_v_act',        // 컨텐츠 내부 동작 (좋아요 공유 스크랩 등)
-        '#bo_vc',           // 댓글
-        '#float',           // 하단 플로트바
-        'div.notice',
-        'ul.banner2',
-        'li.full.pc-only',
-        'li.full.mobile-only',
-        'nav.gnb.sf-js-enabled.sf-arrows',
-        'a.btn_login',
-        '#bnb',
-        '#footer',
-        '.search_wrap ul'
+        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct', 
+        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast', 
+        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',            
+        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only', 
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul'
     ];
 
     elementsToRemove.forEach(selector => {
@@ -143,11 +118,11 @@
     const styleAdjustments = [
         { selector: '.coordinates', height: '50px' },
         { selector: '.title', height: '50px' },
-        { selector: '.main-ranking', height: '474px' }, // 영상별 높이
-        { selector: '.playstart', padding: '0' },        // 재생 플레이어 여백 제거
-        { selector: '.frame-video', marginTop: '0' },    // 재생 플레이어 상단 여백 없애기
-        { selector: '.player-header', padding: '10px 0' }, // 재생 플레이어 제목 여백 수정
-        { selector: '.video-remote', display: 'block', bottom: '60px', width: '150px' } // 아래 다음화 항상 보이게
+        { selector: '.main-ranking', height: '474px' }, 
+        { selector: '.playstart', padding: '0' },        
+        { selector: '.frame-video', marginTop: '0' },    
+        { selector: '.player-header', padding: '10px 0' }, 
+        { selector: '.video-remote', display: 'block', bottom: '60px', width: '150px' } 
     ];
 
     styleAdjustments.forEach(item => {
@@ -172,12 +147,11 @@
 
     // 타이틀 및 로고 변경
     document.title = "Netflix";
-
     const logoLink = document.querySelector("a.logo");
     if (logoLink) {
         const img = logoLink.querySelector("img");
         if (img) {
-            img.src = "https://i.imgur.com/rBAwaXX.png"; // 이미지를 바로 변경
+            img.src = "https://i.imgur.com/rBAwaXX.png"; 
             img.style.width = "110px";
             img.style.height = "auto";
         }
@@ -189,13 +163,11 @@
 
     function replaceIcons() {
         document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
-
         const icon = document.createElement('link');
         icon.rel = "icon";
         icon.type = "image/svg+xml";
         icon.href = faviconURL;
         document.head.appendChild(icon);
-
         const apple = document.createElement('link');
         apple.rel = "apple-touch-icon";
         apple.href = appleIconURL;
@@ -206,39 +178,12 @@
     // 자동 플레이어 넘기기 시도 (버튼 클릭)
     const button = document.querySelector('a.btn.btn_normal');
     if (button) {
-    	button.click();
+        button.click();
     }
 
     // 페이지 로드 후 및 동적 변경 감지
     hideBannerImages();
     const observer = new MutationObserver(hideBannerImages);
     observer.observe(document.body, { childList: true, subtree: true });
-
-
-    // =======================================================
-    // 3. iframe 내부 요소 포커스 차단 로직 (기존 로직 유지)
-    // =======================================================
-    const iframe = document.getElementById('view_iframe');
-
-    // iframe에 접근 가능해야 하며, contentWindow를 통해 내부 DOM에 접근 시도
-    if (iframe && iframe.contentWindow) {
-        try {
-            const iframeDoc = iframe.contentWindow.document;
-
-            // 모든 포커스 가능한 요소들 (a, button, input 등)을 선택합니다.
-            const focusableElements = iframeDoc.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
-
-            // 모든 하위 요소의 포커스를 막습니다.
-            focusableElements.forEach(el => {
-                el.setAttribute('tabindex', '-1');
-            });
-
-            console.log('Success: iframe internal focus has been disabled.');
-
-        } catch (e) {
-            // Same-Origin Policy (SOP) 위반 시 접근 실패
-            console.warn('Warning: Cannot access iframe content (Same-Origin Policy likely). Internal focus block skipped.', e);
-        }
-    }
 
 })();
