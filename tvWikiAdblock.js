@@ -79,7 +79,7 @@
         console.log('Removed the first .slide_wrap element.');
     }
 
-    // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    // 클래스가 'img'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
     document.querySelectorAll('a.img').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
