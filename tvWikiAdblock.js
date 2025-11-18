@@ -5,7 +5,7 @@
 // @description  tvFlixOtt - 메인 페이지 UI 정리 및 포커스 개선
 // @author       Unknown
 
-// @include      /^https?:\/\/[^/]*tvwiki[^/]*\/.*$/ 
+// @include      /^https?:\/\/[^/]*tvwiki[^/]*\/.*$/
 // @icon         https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg
 // @grant        none
 // ==/UserScript==
@@ -26,17 +26,17 @@
             z-index: 9999 !important;
 
             /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
-            outline: 8px solid #FFD700 !important;
-            outline-offset: 0px !important; 
+            outline: 20px solid #FFD700 !important;
+            outline-offset: 0px !important;
 
             /* 박스 그림자: 내부 그림자(inset)를 굵게 설정하여 요소가 잘려도 경계 안에 확실히 포커스 표시 */
-            box-shadow: 
-                0 0 0 8px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
-                0 0 15px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
+            box-shadow:
+                0 0 0 16px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
+                0 0 30px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
 
             transition: outline-color 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
         }
-        
+
         /* Video.js와 같이 특정 클래스를 사용하는 플레이어의 컨트롤에도 강제로 적용 */
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
@@ -62,7 +62,7 @@
     // =======================================================
     // 2. 메인 페이지 (tvwiki) UI 정리 및 스타일 조정 로직
     // =======================================================
-    
+
     // 홈화면의 첫 번째 '.slide_wrap' 제거
     const firstSlideWrap = document.querySelector('.slide_wrap');
     if (firstSlideWrap) {
@@ -80,7 +80,7 @@
             if (h2) {
                 const moreLink = h2.querySelector('a.more');
                 const newTitleText = newTitles[index];
-                
+
                 if (moreLink) {
                     h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
                     console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
@@ -93,7 +93,7 @@
     });
 
     // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
-    document.querySelectorAll('a.title').forEach(element => {
+    document.querySelectorAll('a.img').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
     console.log('Disabled focus for all <a> tags with class "title".');
@@ -101,10 +101,10 @@
 
     // 제거할 UI 요소
     const elementsToRemove = [
-        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct', 
-        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast', 
-        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',            
-        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only', 
+        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
+        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
+        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
+        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
         'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul'
     ];
 
@@ -118,11 +118,11 @@
     const styleAdjustments = [
         { selector: '.coordinates', height: '50px' },
         { selector: '.title', height: '50px' },
-        { selector: '.main-ranking', height: '474px' }, 
-        { selector: '.playstart', padding: '0' },        
-        { selector: '.frame-video', marginTop: '0' },    
-        { selector: '.player-header', padding: '10px 0' }, 
-        { selector: '.video-remote', display: 'block', bottom: '60px', width: '150px' } 
+        { selector: '.main-ranking', height: '474px' },
+        { selector: '.playstart', padding: '0' },
+        { selector: '.frame-video', marginTop: '0' },
+        { selector: '.player-header', padding: '10px 0' },
+        { selector: '.video-remote', display: 'block', bottom: '60px', width: '150px' }
     ];
 
     styleAdjustments.forEach(item => {
@@ -151,7 +151,7 @@
     if (logoLink) {
         const img = logoLink.querySelector("img");
         if (img) {
-            img.src = "https://i.imgur.com/rBAwaXX.png"; 
+            img.src = "https://i.imgur.com/rBAwaXX.png";
             img.style.width = "110px";
             img.style.height = "auto";
         }
