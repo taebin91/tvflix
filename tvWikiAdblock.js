@@ -80,7 +80,7 @@
     }
 
     // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
-    document.querySelectorAll('a.title').forEach(element => {
+    document.querySelectorAll('a.img').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
     console.log('Disabled focus for all <a> tags with class "title".');
