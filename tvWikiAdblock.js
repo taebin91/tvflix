@@ -98,7 +98,7 @@
     });
 
     // 클래스가 'lazy'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
-    document.querySelectorAll('a.lazy').forEach(element => {
+    document.querySelectorAll('img.lazy').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
 
