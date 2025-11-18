@@ -15,36 +15,36 @@
     console.log('TV User Script (tvWikiAdblock.js) loaded and running.');
 
     // =======================================================
-    // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 로직 (가려짐 방지 개선)
-    // - TV 환경에서 포커스 이동 시 테두리가 잘 보이도록 색상, 굵기 조정 및 Z-index 적용
+    // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 로직 (최대 가시성 확보)
+    // - 포커스 아웃라인이 다른 요소에 의해 가려지거나 잘리는 현상을 강제 방지
     // =======================================================
     const style = document.createElement('style');
     style.innerHTML = `
-        /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 및 가려짐 방지 */
+        /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
         :focus {
-            /* 포커스된 요소가 다른 요소 위에 표시되도록 강제로 레이어 올림 */
+            /* 레이어링: 포커스된 요소가 항상 다른 요소 위에 표시되도록 강제로 레이어 올림 */
             position: relative !important;
             z-index: 9999 !important;
 
-            /* 밝은 노란색 (Gold) 굵기 5px 외부 아웃라인 유지 */
-            outline: 5px solid #FFD700 !important;
-            outline-offset: 4px !important;
+            /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
+            outline: 8px solid #FFD700 !important;
+            outline-offset: 0px !important; 
 
-            /* 내부 그림자(inset)를 추가하여 요소 경계 내에 포커스 표시를 보장 */
-            /* 외부 그림자도 유지하여 빛 효과 강화 */
+            /* 박스 그림자: 내부 그림자(inset)를 굵게 설정하여 요소가 잘려도 경계 안에 확실히 포커스 표시 */
+            /* 외부 빛 효과도 더 강하게 설정 */
             box-shadow: 
-                0 0 0 4px #FFD700 inset, /* 내부 그림자로 요소가 잘려도 경계 안에 표시 */
-                0 0 10px rgba(255, 215, 0, 0.9) !important; /* 외부 빛 효과 */
+                0 0 0 8px #FFD700 inset, /* 내부 침범 그림자로 clipping 방지 */
+                0 0 15px rgba(255, 215, 0, 1) !important; /* 강한 외부 빛 효과 */
 
-            transition: outline-color 0.2s, outline-offset 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
+            transition: outline-color 0.2s, box-shadow 0.2s; /* 부드러운 전환 효과 */
         }
         
         /* Video.js와 같이 특정 클래스를 사용하는 플레이어의 컨트롤에도 강제로 적용 */
         .vjs-control-bar button:focus,
         .vjs-menu-button:focus,
         .vjs-control-bar :focus {
-             outline: 5px solid #FFD700 !important;
-             outline-offset: 4px !important;
+             outline: 8px solid #FFD700 !important;
+             outline-offset: 0px !important;
              position: relative !important;
              z-index: 9999 !important;
         }
@@ -58,7 +58,7 @@
         }
     `;
     document.head.appendChild(style);
-    console.log('Focus style improved: Bright yellow outline injected with visibility fix (z-index/inset-shadow).');
+    console.log('Focus style improved: Aggressive 8px outline and inset shadow applied for maximum visibility.');
 
 
     // =======================================================
