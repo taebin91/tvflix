@@ -25,7 +25,7 @@
             position: relative !important;
             z-index: 9999 !important;
 
-            /* 외곽선: 테두리 굵기 증가 (8px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
+            /* 외곽선: 테두리 굵기 증가 (20px) 및 테두리 바로 옆에 붙도록 offset 제거 (0px) */
             outline: 20px solid #FFD700 !important;
             outline-offset: 0px !important;
 
@@ -47,7 +47,7 @@
              z-index: 9999 !important;
         }
 
-        /* iFrame 자체 포커스 스타일 제거 (포커스 갇힘 방지) */
+        /* iFrame 자체 포커스 스타일 제거 (iFrame 클릭시 불필요한 테두리 방지) */
         iframe:focus {
             outline: none !important;
             box-shadow: none !important;
@@ -56,12 +56,43 @@
         }
     `;
     document.head.appendChild(style);
-    console.log('Focus style improved: Aggressive 8px outline and inset shadow applied.');
+    console.log('Focus style improved: Aggressive 20px outline and inset shadow applied.');
 
 
     // =======================================================
     // 2. 메인 페이지 (tvwiki) UI 정리 및 스타일 조정 로직
     // =======================================================
+    
+    /**
+     * 동영상 플레이어를 포함하는 #view_iframe 요소에 전체화면 허용 속성을 추가합니다.
+     * 이는 크로스 오리진 콘텐츠의 전체화면 요청을 상위 문서에서 허용하기 위해 필요합니다.
+     */
+    function ensureIframePermissions() {
+        const iframe = document.getElementById('view_iframe');
+        if (iframe && iframe.tagName === 'IFRAME') {
+            // 1. allowfullscreen 속성 추가/확인
+            if (iframe.getAttribute('allowfullscreen') !== 'true') {
+                iframe.setAttribute('allowfullscreen', 'true');
+                console.log('Added allowfullscreen="true" to #view_iframe.');
+            }
+            
+            // 2. allow 속성 추가/확인 (fullscreen 명시적으로 허용)
+            const currentAllow = iframe.getAttribute('allow') || '';
+            if (!currentAllow.includes('fullscreen')) {
+                 // 기존 속성이 있으면 추가하고, 없으면 'fullscreen *'으로 설정
+                const newAllow = (currentAllow ? currentAllow + '; ' : '') + 'fullscreen *';
+                iframe.setAttribute('allow', newAllow);
+                console.log('Updated allow attribute on #view_iframe to include fullscreen.');
+            }
+
+            // 3. 높이를 100%로 설정하여 레이아웃 문제 방지 (추가)
+            iframe.style.width = '100%';
+            iframe.style.height = '100vh'; // 전체 뷰포트 높이 사용
+            iframe.style.border = 'none'; // 불필요한 테두리 제거
+            iframe.style.display = 'block'; // 블록 요소로 확실히 설정
+        }
+    }
+
 
     // 홈화면의 첫 번째 '.slide_wrap' 제거
     const firstSlideWrap = document.querySelector('.slide_wrap');
@@ -190,5 +221,25 @@
     hideBannerImages();
     const observer = new MutationObserver(hideBannerImages);
     observer.observe(document.body, { childList: true, subtree: true });
+
+    // iFrame이 동적으로 추가될 때도 전체화면 권한을 부여하도록 감시
+    const iframeObserver = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(node => {
+                    // 추가된 노드가 #view_iframe이거나 그 자식에 #view_iframe이 포함된 경우
+                    if (node.id === 'view_iframe' || (node.nodeType === 1 && node.querySelector('#view_iframe'))) {
+                        ensureIframePermissions();
+                    }
+                });
+            }
+        }
+    });
+
+    // body 전체의 변화를 감시
+    iframeObserver.observe(document.body, { childList: true, subtree: true });
+    console.log('MutationObserver started for #view_iframe permissions.');
+    ensureIframePermissions(); // 초기 로드 시에도 한 번 실행
+
 
 })();
