@@ -56,13 +56,19 @@
         // 하지만 혹시 모를 상황에 대비하여 유지합니다.
         // document.documentElement.requestFullscreen(); // WebView 내에서는 OS 수준에서 자동 처리되므로 제거 또는 주석 처리 권장
     });
-
+    
     // 홈화면의 첫 번째 '.slide_wrap' 제거
     const firstSlideWrap = document.querySelector('.slide_wrap');
     if (firstSlideWrap) {
         firstSlideWrap.remove();
         console.log('Removed the first .slide_wrap element.');
     }
+    
+    // 클래스가 'title'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+    document.querySelectorAll('a.title').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
+    console.log('Disabled focus for all <a> tags with class "title".');
 
     // 제거할 UI 요소
     const elementsToRemove = [
