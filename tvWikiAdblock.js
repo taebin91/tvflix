@@ -47,13 +47,7 @@
              z-index: 9999 !important;
         }
 
-        /* iFrame 자체 포커스 스타일 제거 (포커스 갇힘 방지) */
-        iframe:focus {
-            outline: none !important;
-            box-shadow: none !important;
-            position: static !important;
-            z-index: auto !important;
-        }
+
     `;
     document.head.appendChild(style);
     console.log('Focus style improved: Aggressive 8px outline and inset shadow applied.');
@@ -206,3 +200,4 @@
     observer.observe(document.body, { childList: true, subtree: true });
 
 })();
+
