@@ -194,6 +194,14 @@
 
     });
 
+    // 태그가 'img'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
+
+    document.querySelectorAll('img').forEach(element => {
+
+        element.setAttribute('tabindex', '-1');
+
+    });
+
 
 
     // 클래스가 'lazy'인 모든 <a> 태그의 포커스 비활성화 (tabindex="-1")
@@ -385,4 +393,3 @@
 
 
 })();
-
