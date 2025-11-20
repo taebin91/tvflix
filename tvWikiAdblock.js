@@ -116,9 +116,7 @@
     document.querySelectorAll('img.lazy').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
-    document.querySelectorAll('iframe').forEach(element => {
-        element.setAttribute('tabindex', '-1');
-    });
+
 
 
     // 제거할 UI 요소
