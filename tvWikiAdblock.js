@@ -47,7 +47,13 @@
              z-index: 9999 !important;
         }
 
-
+        /* iFrame 자체 포커스 스타일 제거 (포커스 갇힘 방지) */
+        iframe:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            position: static !important;
+            z-index: auto !important;
+        }
     `;
     document.head.appendChild(style);
     console.log('Focus style improved: Aggressive 8px outline and inset shadow applied.');
@@ -110,6 +116,9 @@
     document.querySelectorAll('img.lazy').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
+    document.querySelectorAll('iframe').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
 
 
     // 제거할 UI 요소
@@ -118,7 +127,7 @@
         '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
         '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
         'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
-        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul'
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer'
     ];
 
     elementsToRemove.forEach(selector => {
@@ -200,4 +209,3 @@
     observer.observe(document.body, { childList: true, subtree: true });
 
 })();
-
