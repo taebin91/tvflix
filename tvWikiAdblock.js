@@ -162,7 +162,7 @@
             font-weight: bold !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
             transition: background-color 0.2s !important;
-            width: 160px !important; /* 가로 길이 축소 및 강제 설정 */
+            width: 260px !important; /* 가로 길이 축소 및 강제 설정 */
             height: 60px !important;
         `;
 
@@ -177,17 +177,17 @@
         // ************************************************
         // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
         // ************************************************
-        playButton.onclick = function(e) { 
-            e.preventDefault(); 
+        playButton.onclick = function(e) {
+            e.preventDefault();
             console.log('동영상 재생하기 버튼 클릭됨.');
-            
-            // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
+
+            // AndroidTV 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
             // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
-            if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
-                NativeApp.handlePlayButtonClick();
-                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
+            if (typeof AndroidTV !== 'undefined' && AndroidTV.handlePlayButtonClick) {
+                AndroidTV.handlePlayButtonClick();
+                console.log('Called AndroidTV.handlePlayButtonClick() on native side.');
             } else {
-                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
+                console.warn('AndroidTV interface (handlePlayButtonClick) not found.');
             }
         };
         // ************************************************
