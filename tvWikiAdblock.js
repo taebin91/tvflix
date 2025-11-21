@@ -44,24 +44,44 @@
              z-index: 9999 !important;
         }
 
-        /* iFrame 포커스 스타일 제거 */
+        /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
             outline: none !important;
             box-shadow: none !important;
             position: static !important;
             z-index: auto !important;
         }
+        /* [NEW FEATURE] 모든 iframe을 시각적으로 숨기기 */
+        iframe {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
 
-        /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
-        #header_wrap #header #tnb ul li {
-            float: none !important;
-            display: inline-block !important;
-            width: auto !important;
-            height: auto !important;
-            min-width: unset !important;
-            margin: 0 !important;
+        /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
+        #header_wrap #header #tnb ul li {
+            float: none !important;
+            display: inline-block !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: unset !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* [NEW FEATURE] .bo_v_mov 크기를 버튼에 맞게 강제 축소 및 중앙 정렬 */
+        .bo_v_mov {
+            width: 100% !important;
+            height: 80px !important; /* 버튼이 들어갈 높이로 강제 축소 */
+            display: flex !important;
+            justify-content: center !important; /* 중앙 정렬 */
+            align-items: center !important; /* 중앙 정렬 */
+            background-color: #1a1a1a !important; /* 배경색을 어둡게 설정 */
+            border-radius: 8px !important;
+            margin: 10px 0 !important;
             padding: 0 !important;
         }
+
 
         /* [MAX SPECIFICITY FIX] ID 선택자를 모두 포함하여 명시도를 최상으로 높임 */
         #header_wrap #header #tnb ul li a.btn_search {
@@ -103,12 +123,67 @@
         }
     `;
     document.head.appendChild(style);
-    console.log('Focus style and btn_search layout improved with maximum CSS specificity enforcement and parent fix.');
+    console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
 
 
     // =======================================================
     // 2. 메인 페이지 (tvwiki) UI 정리 및 포커스 조정 로직
     // =======================================================
+
+    // ---------------------------------------------------
+    // [추가된 기능] '.bo_v_tit' 요소에서 '다시보기' 텍스트 제거
+    // ---------------------------------------------------
+    document.querySelectorAll('.bo_v_tit').forEach(element => {
+        // 정규 표현식을 사용하여 모든 '다시보기' 문자열을 빈 문자열로 대체하고 앞뒤 공백 제거
+        if (element.textContent.includes('다시보기')) {
+            element.textContent = element.textContent.replace(/다시보기/g, '').trim();
+            console.log('Removed "다시보기" text from .bo_v_tit.');
+        }
+    });
+    // ---------------------------------------------------
+
+    // ---------------------------------------------------
+    // [새로운 기능] '.bo_v_mov'에 '동영상 재생하기' 버튼 추가
+    // ---------------------------------------------------
+    document.querySelectorAll('div.bo_v_mov').forEach(container => {
+        // "동영상 재생하기" 버튼 생성
+        const playButton = document.createElement('button');
+        playButton.textContent = '동영상 재생하기';
+        playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
+
+        // 버튼 스타일 강제 적용 (Netflix 스타일)
+        playButton.style.cssText = `
+            background-color: #e50914 !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            font-size: 1.5em !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+            transition: background-color 0.2s !important;
+            min-width: 200px !important;
+            height: 60px !important;
+        `;
+
+        // 포커스/호버 효과 추가
+        playButton.onmouseover = playButton.onfocus = function() {
+            this.style.backgroundColor = '#f40612'; // 더 밝은 빨강
+        };
+        playButton.onmouseout = playButton.onblur = function() {
+            this.style.backgroundColor = '#e50914'; // 원래 빨강
+        };
+
+        // 클릭 시 동작 없음 (요청 사항)
+        playButton.onclick = function(e) { e.preventDefault(); console.log('동영상 재생하기 버튼 클릭됨 (현재 동작 없음).'); };
+
+        // 컨테이너에 버튼 추가
+        container.appendChild(playButton);
+        console.log('Added "동영상 재생하기" button to .bo_v_mov.');
+    });
+    // ---------------------------------------------------
+
 
     // .slide_wrap 내부의 '.title'을 제외한 모든 요소의 포커스 비활성화
     document.querySelectorAll('.slide_wrap *').forEach(element => {
@@ -153,14 +228,9 @@
     const searchButton = document.querySelector('a.btn_search');
     if (searchButton) {
         // 1. 인라인 스타일을 JS로 직접 덮어씌워서 CSS 충돌을 완전히 회피 (레이아웃 고정)
-
-        searchButton.style.setProperty('align-items', 'center', 'important'); // <-- 복구된 핵심 레이아웃
-
-
-
+        searchButton.style.setProperty('align-items', 'center', 'important'); // <-- 복구된 핵심 레이아웃
         searchButton.style.setProperty('width', 'auto', 'important');
-
-
+        searchButton.style.setProperty('display', 'flex', 'important'); // flex 강제 적용 (CSS에 이미 있지만 안전을 위해)
 
 
         // 2. 텍스트를 담을 span 요소를 생성
@@ -168,8 +238,8 @@
         searchLabel.textContent = ' 검색 ';
         searchLabel.classList.add('search-label');
 
-        // 3. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
-        searchLabel.style.setProperty('font-size', '1.9em', 'important'); // <<-- 최종 폰트 크기 강제 적용
+        // 3. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
+        searchLabel.style.setProperty('font-size', '1.9em', 'important'); // <<-- 최종 폰트 크기 강제 적용
 
         // 버튼 아이콘 앞에 텍스트 추가
         searchButton.prepend(searchLabel);
