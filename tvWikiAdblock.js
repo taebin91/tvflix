@@ -181,13 +181,13 @@
             e.preventDefault();
             console.log('동영상 재생하기 버튼 클릭됨.');
 
-            // AndroidTV 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
+            // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
             // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
-            if (typeof AndroidTV !== 'undefined' && AndroidTV.handlePlayButtonClick) {
-                AndroidTV.handlePlayButtonClick();
-                console.log('Called AndroidTV.handlePlayButtonClick() on native side.');
+            if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
+                NativeApp.handlePlayButtonClick();
+                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
             } else {
-                console.warn('AndroidTV interface (handlePlayButtonClick) not found.');
+                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
             }
         };
         // ************************************************
