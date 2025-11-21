@@ -147,7 +147,7 @@
     document.querySelectorAll('div.bo_v_mov').forEach(container => {
         // "동영상 재생하기" 버튼 생성
         const playButton = document.createElement('button');
-        playButton.textContent = '동영상 재생하기';
+        playButton.textContent = '▶️ 재생';
         playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
 
         // 버튼 스타일 강제 적용 (Netflix 스타일) - 폰트 크기 증가 및 가로 길이 축소 반영
