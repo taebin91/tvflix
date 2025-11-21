@@ -165,7 +165,7 @@
 
         // 2. 텍스트를 담을 span 요소를 생성
         const searchLabel = document.createElement('span');
-        searchLabel.textContent = '검색하기 ';
+        searchLabel.textContent = ' 검색 ';
         searchLabel.classList.add('search-label');
 
         // 3. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
