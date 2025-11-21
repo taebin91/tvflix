@@ -162,7 +162,7 @@
             font-weight: bold !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
             transition: background-color 0.2s !important;
-            width: 260px !important; /* 가로 길이 축소 및 강제 설정 */
+            width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
             height: 60px !important;
         `;
 
