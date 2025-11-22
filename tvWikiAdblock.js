@@ -31,7 +31,7 @@
     }
     // =======================================================
 
-  
+
 
     // =======================================================
     // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
@@ -218,9 +218,9 @@
     // ---------------------------------------------------
 
 
-    // .slide_wrap 내부의 '.title'을 제외한 모든 요소의 포커스 비활성화
+    // .slide_wrap 내부의 '.title', 'more'을 제외한 모든 요소의 포커스 비활성화
     document.querySelectorAll('.slide_wrap *').forEach(element => {
-        if (element.classList && !element.classList.contains('title')) {
+        if (element.classList && !element.classList.contains('title')) &&element.classList.contains('more') {
             element.setAttribute('tabindex', '-1');
         }
     });
