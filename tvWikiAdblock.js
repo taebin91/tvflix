@@ -14,6 +14,25 @@
     'use strict';
     console.log('TV User Script (tvWikiAdblock.js) loaded and running (Main Page Only).');
 
+
+    // =======================================================
+    // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
+    // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap을 삭제합니다.
+    // =======================================================
+    const pathname = window.location.pathname;
+    const isSubPage = pathname !== '/' && pathname !== ''; // 메인 페이지가 아닌 경우 (예: /view/1234)
+
+    if (isSubPage) {
+        const headerWrap = document.getElementById('header_wrap');
+        if (headerWrap) {
+            headerWrap.remove();
+            console.log('Conditional: Removed #header_wrap because this is a subpage.');
+        }
+    }
+    // =======================================================
+
+  
+
     // =======================================================
     // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
     // =======================================================
@@ -118,7 +137,7 @@
             font-weight: bold;
             color: inherit;
             /* CSS도 충분히 높여서 혹시 모를 경우 대비 (JS에서 최종 오버라이드 됨) */
-            font-size: 1.8em !important;
+            font-size: 1.7em !important;
         }
     `;
     document.head.appendChild(style);
@@ -253,7 +272,7 @@
         searchLabel.classList.add('search-label');
 
         // 3. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
-        searchLabel.style.setProperty('font-size', '1.9em', 'important'); // <<-- 최종 폰트 크기 강제 적용
+        searchLabel.style.setProperty('font-size', '1.7em', 'important'); // <<-- 최종 폰트 크기 강제 적용
 
         // 버튼 아이콘 앞에 텍스트 추가
         searchButton.prepend(searchLabel);
@@ -354,4 +373,8 @@
     const observer = new MutationObserver(hideBannerImages);
     observer.observe(document.body, { childList: true, subtree: true });
 
+
+// ---------------------------------------------------
+
 })();
+
