@@ -22,13 +22,20 @@
     const pathname = window.location.pathname;
     const isSubPage = pathname !== '/' && pathname !== ''; // 메인 페이지가 아닌 경우 (예: /view/1234)
 
-    if (isSubPage) {
-        const headerWrap = document.getElementById('header_wrap');
-        if (headerWrap) {
-            headerWrap.remove();
-            console.log('Conditional: Removed #header_wrap because this is a subpage.');
-        }
-    }
+    if (isSubPage) {
+        const headerWrap = document.getElementById('header_wrap');
+        if (headerWrap) {
+            headerWrap.remove();
+            console.log('Conditional: Removed #header_wrap because this is a subpage.');
+        }
+    } else {
+        // isSubPage가 false일 때 실행되는 부분
+        const headerWrap = document.getElementById('header_wrap');
+        if (headerWrap) {
+            // #header_wrap의 높이를 100px로 설정
+            headerWrap.style.height = '100px';
+        }
+    }
     // =======================================================
 
 
