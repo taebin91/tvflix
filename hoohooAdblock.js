@@ -75,10 +75,7 @@
             z-index: auto !important;
         }
         /* [NEW FEATURE] 모든 iframe을 시각적으로 숨기기 */
-        iframe {
-            width: 0 !important;
-            height: 0 !important;
-        }
+
 
         /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
         #header_wrap #header #tnb ul li {
@@ -378,4 +375,3 @@
 // ---------------------------------------------------
 
 })();
-
