@@ -12,8 +12,6 @@
 
 (function() {
     'use strict';
-    console.log('TV User Script (tvWikiAdblock.js) loaded and running (Main Page Only).');
-
 
     // =======================================================
     // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
