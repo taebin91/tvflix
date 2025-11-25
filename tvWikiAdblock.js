@@ -13,6 +13,9 @@
 (function() {
     'use strict';
 
+
+
+
     // =======================================================
     // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
     // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap을 삭제합니다.
@@ -33,7 +36,36 @@
             // #header_wrap의 높이를 100px로 설정
             headerWrap.style.height = '100px';
         }
+
+
+        // 검색 버튼 중앙 높이에 위치시키기
+        const headerElement = document.getElementById('header');
+        if (!headerElement) {
+            console.warn('#header 요소를 찾을 수 없습니다.');
+            return;
+        }
+
+        // 2. 부모 요소를 찾습니다. (가장 가까운 컨테이너)
+        const parent = headerElement.parentElement;
+        if (!parent) {
+            console.error('#header의 부모 요소를 찾을 수 없습니다.');
+            return;
+        }
+
+        // 3. 부모 요소에 Flexbox 속성을 적용하여 수직 가운데 정렬을 설정합니다.
+        parent.style.display = 'flex';
+        parent.style.alignItems = 'center'; // 수직 중앙 정렬
+
+        // 선택 사항: 부모 높이가 명확하지 않은 경우 전체 뷰포트를 사용하도록 설정
+        // parent.style.height = '100vh';
+
+        console.log('Flexbox를 이용해 #header를 수직 중앙 정렬했습니다.');
+
+
     }
+
+
+
     // =======================================================
 
 
@@ -58,16 +90,6 @@
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Video.js 컨트롤 포커스 적용 */
-        .vjs-control-bar button:focus,
-        .vjs-menu-button:focus,
-        .vjs-control-bar :focus {
-             outline: 8px solid #FFD700 !important;
-             outline-offset: 0px !important;
-             position: relative !important;
-             z-index: 9999 !important;
-        }
-
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
             outline: none !important;
@@ -75,11 +97,7 @@
             position: static !important;
             z-index: auto !important;
         }
-        /* [NEW FEATURE] 모든 iframe을 시각적으로 숨기기 */
-        iframe {
-            width: 0 !important;
-            height: 0 !important;
-        }
+
 
         /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
         #header_wrap #header #tnb ul li {
@@ -266,9 +284,9 @@
     const searchButton = document.querySelector('a.btn_search');
     if (searchButton) {
         // 1. 인라인 스타일을 JS로 직접 덮어씌워서 CSS 충돌을 완전히 회피 (레이아웃 고정)
-        searchButton.style.setProperty('align-items', 'center', 'important'); // <-- 복구된 핵심 레이아웃
-        searchButton.style.setProperty('width', 'auto', 'important');
-        searchButton.style.setProperty('display', 'flex', 'important'); // flex 강제 적용 (CSS에 이미 있지만 안전을 위해)
+        //searchButton.style.setProperty('align-items', 'center', 'important'); // <-- 복구된 핵심 레이아웃
+        //searchButton.style.setProperty('width', 'auto', 'important');
+        //searchButton.style.setProperty('display', 'flex', 'important'); // flex 강제 적용 (CSS에 이미 있지만 안전을 위해)
 
 
         // 2. 텍스트를 담을 span 요소를 생성
@@ -382,3 +400,4 @@
 // ---------------------------------------------------
 
 })();
+
