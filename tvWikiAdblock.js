@@ -58,16 +58,6 @@
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Video.js 컨트롤 포커스 적용 */
-        .vjs-control-bar button:focus,
-        .vjs-menu-button:focus,
-        .vjs-control-bar :focus {
-             outline: 8px solid #FFD700 !important;
-             outline-offset: 0px !important;
-             position: relative !important;
-             z-index: 9999 !important;
-        }
-
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
             outline: none !important;
@@ -75,11 +65,7 @@
             position: static !important;
             z-index: auto !important;
         }
-        /* [NEW FEATURE] 모든 iframe을 시각적으로 숨기기 */
-        iframe {
-            width: 0 !important;
-            height: 0 !important;
-        }
+
 
         /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
         #header_wrap #header #tnb ul li {
@@ -382,4 +368,5 @@
 // ---------------------------------------------------
 
 })();
+
 
