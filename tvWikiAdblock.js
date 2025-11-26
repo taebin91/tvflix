@@ -78,12 +78,20 @@
     const style = document.createElement('style');
     style.innerHTML = `
 
-/* =========================================================== */
-        /* [NEW FIX] Owl Carousel: Force 4 items with Aspect Ratio (2:3 assumed) */
+/* (기존 포커스 및 UI 스타일 유지) */
 
+        /* =========================================================== */
+        /* [FIX] Owl Carousel: Restore Sliding, Keep Aspect Ratio (2:3 assumed) */
+
+        /* 1. Owl Item의 너비/마진에 대한 강제 설정 (4개 강제) 제거 */
+        /* -> 이제 Owl Carousel JS가 계산한 5개 아이템 너비를 사용합니다. */
+
+        /* 2. Owl Stage의 transform 및 width 초기화 제거 */
+        /* -> Owl Carousel JS가 슬라이딩을 위해 설정하는 transform을 복구합니다. */
 
 
         /* 3. 이미지 컨테이너 (.img)에 비율 유지 핵 적용 (썸네일 비율 2:3 가정) */
+        /* * 비율 유지를 위해 .img 요소에 padding-top: 150%만 적용 */
         .owl-carousel .owl-item .box > a.img {
             /* position: relative 필수: 자식 img가 absolute로 배치될 기준점 */
             position: relative !important;
@@ -106,9 +114,10 @@
             object-fit: cover !important; /* 이미지 잘림 없이 컨테이너에 맞춤 */
         }
 
-        /* 5. 제목(.title) 높이도 줄어든 크기에 맞게 조정 (선택 사항: 세로 길이 축소 반영) */
+        /* 5. 제목(.title) 높이도 줄어든 크기에 맞게 조정 */
+        /* (이 부분은 비율과 관계 없지만 전체 세로 길이 축소를 위해 유지) */
         .owl-carousel .owl-item .title {
-            height: 35px !important; /* 기존 50px에서 35px로 줄여서 전체 세로 길이 축소에 기여 */
+            height: 35px !important;
             line-height: 1.2 !important;
             font-size: 14px !important;
         }
