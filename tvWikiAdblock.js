@@ -78,6 +78,24 @@
     const style = document.createElement('style');
     style.innerHTML = `
 
+        /* =========================================================== */
+        /* [FIX 2] Title Link Font Size and Vertical Alignment */
+        /* 높은 명시도로 폰트 크기 및 수직 정렬을 강제 적용합니다. */
+        .owl-carousel .owl-item .title,
+        .owl-carousel .owl-item .box a.title, /* 명시도 확보를 위한 추가 셀렉터 */
+        a.title {
+            /* 1. 높이 유지 (50px) 및 수직 중앙 정렬을 위해 line-height를 높이와 동일하게 설정 */
+            height: 50px !important;
+            line-height: 50px !important;
+
+            /* 2. 폰트 크기 키우기 (명시도 + 크기 강제) */
+            font-size: 1.4em !important;
+
+
+
+        }
+        /* =========================================================== */
+
 /* (기존 포커스 및 UI 스타일 유지) */
 
         /* =========================================================== */
