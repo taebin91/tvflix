@@ -16,6 +16,8 @@
 
 
 
+
+
     // =======================================================
     // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
     // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap을 삭제합니다.
@@ -75,6 +77,43 @@
     // =======================================================
     const style = document.createElement('style');
     style.innerHTML = `
+
+/* =========================================================== */
+        /* [NEW FIX] Owl Carousel: Force 4 items with Aspect Ratio (2:3 assumed) */
+
+
+
+        /* 3. 이미지 컨테이너 (.img)에 비율 유지 핵 적용 (썸네일 비율 2:3 가정) */
+        .owl-carousel .owl-item .box > a.img {
+            /* position: relative 필수: 자식 img가 absolute로 배치될 기준점 */
+            position: relative !important;
+            width: 100% !important;
+            height: 0 !important; /* 높이는 padding-top으로 대체 */
+
+            /* Aspect Ratio Hack: 가로 2 : 세로 3 (150%) 비율 유지 */
+            padding-top: 150% !important;
+            overflow: hidden !important;
+            display: block !important;
+        }
+
+        /* 4. 비율 유지 컨테이너 내부의 이미지 크기 강제 */
+        .owl-carousel .owl-item .box > a.img > img {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important; /* 이미지 잘림 없이 컨테이너에 맞춤 */
+        }
+
+        /* 5. 제목(.title) 높이도 줄어든 크기에 맞게 조정 (선택 사항: 세로 길이 축소 반영) */
+        .owl-carousel .owl-item .title {
+            height: 35px !important; /* 기존 50px에서 35px로 줄여서 전체 세로 길이 축소에 기여 */
+            line-height: 1.2 !important;
+            font-size: 14px !important;
+        }
+        /* =========================================================== */
+
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
         :focus {
             position: relative !important;
