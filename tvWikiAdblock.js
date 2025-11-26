@@ -386,7 +386,7 @@
         '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
         '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
         'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
-        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre'
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre', '#other_list ul li p'
     ];
 
     elementsToRemove.forEach(selector => {
@@ -394,6 +394,7 @@
             element.remove();
         });
     });
+
 
     // 스타일 조정
     const styleAdjustments = [
