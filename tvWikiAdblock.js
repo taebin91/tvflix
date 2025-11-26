@@ -82,7 +82,7 @@
         /* [FIX 2] Title Link Font Size and Vertical Alignment */
         /* 높은 명시도로 폰트 크기 및 수직 정렬을 강제 적용합니다. */
         .owl-carousel .owl-item .title,
-        .owl-carousel .owl-item .box a.title, /* 명시도 확보를 위한 추가 셀렉터 */
+        .owl-carousel .owl-item .box a.title, a.more /* 명시도 확보를 위한 추가 셀렉터 */
         a.title {
             /* 1. 높이 유지 (50px) 및 수직 중앙 정렬을 위해 line-height를 높이와 동일하게 설정 */
             height: 50px !important;
@@ -90,9 +90,14 @@
 
             /* 2. 폰트 크기 키우기 (명시도 + 크기 강제) */
             font-size: 1.4em !important;
+        }
 
+        a.more {
+            font-size: 0.9em !important;
+        }
 
-
+        h2 {
+            font-size: 1.7em !important;
         }
         /* =========================================================== */
 
@@ -381,7 +386,7 @@
         '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
         '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
         'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
-        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer'
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre'
     ];
 
     elementsToRemove.forEach(selector => {
