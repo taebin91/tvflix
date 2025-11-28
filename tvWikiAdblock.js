@@ -375,9 +375,14 @@
     // ---------------------------------------------------
 
     // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
-    document.querySelectorAll('a.img, img, img.lazy, iframe, .body_wrap').forEach(element => {
+    document.querySelectorAll('a.img, img, img.lazy, iframe').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
+	
+	const formElement = document.getElementById('fboardlist');
+    if (formElement) {
+        formElement.setAttribute('tabindex', '-1');
+		}
 
 
     // 제거할 UI 요소
