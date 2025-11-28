@@ -14,10 +14,6 @@
     'use strict';
 
 
-
-
-
-
     // =======================================================
     // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
     // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap을 삭제합니다.
@@ -77,6 +73,69 @@
     // =======================================================
     const style = document.createElement('style');
     style.innerHTML = `
+
+        /* 🚨 [새로운 수정] 커스텀 알림 모달 스타일 */
+        .custom-alert-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-alert-modal {
+            background: #2c2c2c; /* 다크 모드 배경 */
+            color: #f0f0f0; /* 밝은 텍스트 */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #FFD700; /* 포커스 색상 */
+        }
+        .custom-alert-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+        .custom-alert-message {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .custom-alert-actions button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+        .custom-alert-actions button:focus,
+        .custom-alert-actions button:hover {
+            background-color: #FFD700;
+            color: #111;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+
+
+        
+
+        /* 🚨 [새로운 수정] "전체보기" 링크를 오른쪽에서 띄우기 위한 스타일 */
+        /* 이 링크는 h2 내부에 있으므로, 오른쪽 끝에서 20px의 여백을 줍니다. */
+        .more {
+            padding-right: 20px !important;
+        }
 
         /* =========================================================== */
         /* [FIX 2] Title Link Font Size and Vertical Alignment */
@@ -378,7 +437,7 @@
     document.querySelectorAll('a.img, img, img.lazy, iframe').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
-	
+
 	const formElement = document.getElementById('fboardlist');
     if (formElement) {
         formElement.setAttribute('tabindex', '-1');
@@ -477,3 +536,89 @@
 // ---------------------------------------------------
 
 })();
+
+
+
+
+
+
+    // =======================================================
+    // 2. 알림창 제목 재정의 로직: 모든 웹사이트 알림을 '알림'으로 통일
+    // =======================================================
+
+    // 커스텀 알림 모달을 표시하는 함수
+    function showCustomAlert(message, isConfirm = false) {
+        // 이미 모달이 떠 있다면 새 모달을 띄우지 않음 (중첩 방지)
+        if (document.querySelector('.custom-alert-backdrop')) {
+            console.warn('Attempted to show multiple alerts. Skipping new alert.');
+            return isConfirm ? false : undefined;
+        }
+
+        return new Promise(resolve => {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'custom-alert-backdrop';
+
+            const modal = document.createElement('div');
+            modal.className = 'custom-alert-modal';
+
+            // 🚨 고정된 제목: 사용자가 요청한 '알림'
+            const title = document.createElement('div');
+            title.className = 'custom-alert-title';
+            title.textContent = '알림';
+
+            const msg = document.createElement('div');
+            msg.className = 'custom-alert-message';
+            msg.textContent = message;
+
+            const actions = document.createElement('div');
+            actions.className = 'custom-alert-actions';
+
+            const okButton = document.createElement('button');
+            okButton.textContent = isConfirm ? '확인' : '닫기';
+            okButton.onclick = () => {
+                backdrop.remove();
+                resolve(true); // alert이거나 confirm에서 확인을 누른 경우
+            };
+
+            modal.appendChild(title);
+            modal.appendChild(msg);
+
+            if (isConfirm) {
+                const cancelButton = document.createElement('button');
+                cancelButton.textContent = '취소';
+                cancelButton.onclick = () => {
+                    backdrop.remove();
+                    resolve(false); // confirm에서 취소를 누른 경우
+                };
+                actions.appendChild(cancelButton);
+            }
+
+            actions.appendChild(okButton);
+            modal.appendChild(actions);
+            backdrop.appendChild(modal);
+            document.body.appendChild(backdrop);
+
+            // D-Pad 탐색을 위해 버튼에 포커스 설정
+            setTimeout(() => {
+                okButton.focus();
+            }, 0);
+        });
+    }
+
+    // 네이티브 window.alert 덮어쓰기
+    window.alert = function(message) {
+        showCustomAlert(String(message));
+    };
+
+    // 네이티브 window.confirm 덮어쓰기 (await을 통해 결과를 동기적으로 반환)
+    window.confirm = async function(message) {
+        return await showCustomAlert(String(message), true);
+    };
+
+    // window.prompt는 복잡한 사용자 입력이 필요하므로 지원하지 않고 경고 처리 후 null 반환
+    window.prompt = function(message) {
+        console.warn('window.prompt was called. Returning null as it is not supported by custom alerts. Message:', message);
+        return null;
+    };
+
+    console.log('Native alert/confirm functions have been overridden with a custom modal titled "알림".');
