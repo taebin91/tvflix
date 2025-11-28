@@ -151,12 +151,12 @@
             position: relative !important;
             z-index: 9999 !important;
 
-            outline: 8px solid #FFD700 !important;
+            outline: 4px solid #FFD700 !important;
             outline-offset: 0px !important;
 
             box-shadow:
-                0 0 0 2px #FFD700 inset,
-                0 0 4px rgba(255, 215, 0, 1) !important;
+                0 0 0 4px #FFD700 inset,
+                0 0 8px rgba(255, 215, 0, 1) !important;
 
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
