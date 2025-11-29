@@ -1,1 +1,36 @@
-
+{
+  "channels": [
+    {
+      "name": "TV조선",
+      "url": "https://www.tving.com/live/C01581"
+    },
+    {
+      "name": "MBN",
+      "url": "https://www.tving.com/live/C00708"
+    },
+    {
+      "name": "채널A",
+      "url": "https://www.tving.com/live/C01583"
+    },
+    {
+      "name": "JTBC",
+      "url": "https://www.tving.com/live/C01582"
+    },
+    {
+      "name": "TVN",
+      "url": "https://www.tving.com/live/C00551"
+    },
+    {
+      "name": "YTN",
+      "url": "https://www.tving.com/live/C00593"
+    },
+    {
+      "name": "연합뉴스",
+      "url": "https://www.tving.com/live/C01723"
+    },
+    {
+      "name": "MNET",
+      "url": "https://www.tving.com/live/C00579"
+    }
+  ]
+}
