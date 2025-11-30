@@ -383,18 +383,27 @@
         }
         /* =========================================================== */
 
+
+
+
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
         :focus {
 
             z-index: 9999 !important;
-            background-color: #1E90FF !important;/* Dodger Blue */
-            //outline: 4px solid #1E90FF !important;/* Dodger Blue */
-            //outline-offset: 0px !important;
+            background-color: #FFD700 !important; /* 노란색 배경 */
+            outline: 4px solid #FFD700 !important;
+            outline-offset: 0px !important;
+
             box-shadow:
-                0 0 0 4px #1E90FF inset,
-                0 0 8px #1E90FF !important;
-            transition: outline-color 0.2s, box-shadow 0.2s !important;
+                0 0 0 400px #FFD700 inset,
+                0 0 400px rgba(255, 215, 0, 1) !important;
+
+            transition: outline-color 0.2s, box-shadow 0.2s;
         }
+
+
+
+
 
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
@@ -607,3 +616,52 @@
             input.focus();       // 포커스 다시 주기 (선택)
         }
 });
+
+
+let focusOverlay = null;
+
+document.addEventListener('focusin', (e) => {
+    const el = e.target;
+    const rect = el.getBoundingClientRect();
+
+    // 원래 요소 숨기기
+    el.style.visibility = 'hidden';
+
+    // 새로운 레이어 생성
+    focusOverlay = document.createElement('div');
+    focusOverlay.textContent = el.textContent; // 글자 복사
+    focusOverlay.style.position = 'absolute';
+    focusOverlay.style.top = `${rect.top + window.scrollY}px`;
+    focusOverlay.style.left = `${rect.left + window.scrollX}px`;
+    focusOverlay.style.width = `${rect.width}px`;
+    focusOverlay.style.height = `${rect.height}px`;
+
+    focusOverlay.style.color = '#000'; // 글자 색
+    focusOverlay.style.fontWeight = 'bold'; // 볼드
+    focusOverlay.style.display = 'flex';
+    focusOverlay.style.alignItems = 'center';
+    focusOverlay.style.justifyContent = 'center';
+    focusOverlay.style.background = 'rgba(255, 215, 0, 0.7)'; // 포커스 배경
+    focusOverlay.style.zIndex = '999999';
+    focusOverlay.style.pointerEvents = 'none'; // 클릭 방해하지 않도록
+    focusOverlay.style.padding = window.getComputedStyle(el).padding; // 패딩 복사
+    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
+    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
+    document.body.appendChild(focusOverlay);
+});
+
+document.addEventListener('focusout', (e) => {
+    const el = e.target;
+
+    // 새로 만든 레이어 제거
+    if (focusOverlay) {
+        focusOverlay.remove();
+        focusOverlay = null;
+    }
+
+    // 원래 요소 다시 보이기
+    el.style.visibility = '';
+});
+
+
+
