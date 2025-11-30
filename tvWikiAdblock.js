@@ -387,13 +387,10 @@
         :focus {
 
             z-index: 9999 !important;
-            background-color: #FFD700 !important; /* 노란색 배경 */
-            outline: 4px solid #FFD700 !important;
-            outline-offset: 0px !important;
-
-            box-shadow:
-                0 0 0 4px #FFD700 inset,
-                0 0 8px rgba(255, 215, 0, 1) !important;
+background-color: #1E90FF; /* Dodger Blue */
+outline: 4px solid #1E90FF;
+box-shadow: 0 0 0 4px #1E90FF inset, 0 0 8px rgba(30,144,255,1);
+color: white !important;
 
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
