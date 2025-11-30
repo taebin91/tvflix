@@ -213,31 +213,19 @@
         /* =========================================================== */
 
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
-/* 평소에도 반짝이는 포커스 효과 */
-.focus-glow {
-    z-index: 9999 !important;
-    outline: 3px solid #FFD700 !important;
-    outline-offset: 1px !important;
-    box-shadow:
-        0 0 0 3px #FFD700 inset !important,
-        0 0 6px rgba(255, 215, 0, 1) !important;
-    animation: glow 1s infinite alternate !important;
-}
+        :focus {
 
-@keyframes glow {
-    0% {
-        box-shadow: 0 0 0 3px #FFD700 inset !important, 0 0 6px rgba(255, 215, 0, 0.5) !important;
-        outline-color: #FFD700 !important;
-    }
-    50% {
-        box-shadow: 0 0 0 3px #FFD700 inset !important, 0 0 12px rgba(255, 215, 0, 1) !important;
-        outline-color: #FFFF00 !important;
-    }
-    100% {
-        box-shadow: 0 0 0 3px #FFD700 inset !important, 0 0 6px rgba(255, 215, 0, 0.5) !important;
-        outline-color: #FFD700 !important;
-    }
-}
+            z-index: 9999 !important;
+
+            outline: 3px solid #FFD700 !important;
+            outline-offset: 1px !important;
+
+            box-shadow:
+                0 0 0 3px #FFD700 inset,
+                0 0 6px rgba(255, 215, 0, 1) !important;
+
+            transition: outline-color 0.2s, box-shadow 0.2s;
+        }
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
