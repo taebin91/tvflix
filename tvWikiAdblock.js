@@ -17,68 +17,218 @@
     'use strict';
 
 
-    // =======================================================
-    // [새로운 로직] 0. 페이지 경로 확인 및 헤더 삭제
-    // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap을 삭제합니다.
-    // =======================================================
-    const pathname = window.location.pathname;
-    const isSubPage = pathname !== '/' && pathname !== ''; // 메인 페이지가 아닌 경우 (예: /view/1234)
 
-    if (isSubPage) {
+  // 1. 포커스 비활성화 로직
+  // 2. UI 요소 제거 로직
+  // 3. UI 요소 추가 로직
+  // 4. UI 요소 변경 로직
+  // 5. 기타
+
+
+    // =======================================================
+    // 1. 포커스 비활성화
+    // =======================================================
+    // .slide_wrap 내부의 '.title'을 제외한 모든 요소의 포커스 비활성화
+    document.querySelectorAll('.slide_wrap *').forEach(element => {
+    if (element.classList && !element.classList.contains('title') && !element.classList.contains('more')) {
+      element.setAttribute('tabindex', '-1');
+        }
+    });
+
+    // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
+    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
+
+	  const formElement = document.getElementById('fboardlist');
+		if (formElement) {
+			formElement.setAttribute('tabindex', '-1');
+		}
+
+	  const searchElement= document.getElementById('sch_submit');
+		if (searchElement) {
+			searchElement.setAttribute('tabindex', '-1');
+		}
+    // =======================================================
+
+
+
+
+
+
+    // =======================================================
+    // 2. UI 요소 제거
+    // =======================================================
+    const elementsToRemove = [
+        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
+        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
+        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
+        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre', '#other_list ul li p'
+    ];
+
+    elementsToRemove.forEach(selector => {
+        document.querySelectorAll(selector).forEach(element => {
+            element.remove();
+        });
+    });
+    // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap (로고, 검색버튼)을 삭제
+    const pathname = window.location.pathname;
+    // '/'로 분리 후 빈 문자열 제거
+    const pathSegments = pathname.split('/').filter(seg => seg !== '');
+    // pathSegments 길이로 깊이 판단
+    // pathSegments.length > 1이면 서브서브 페이지
+    if (pathSegments.length > 1) {
         const headerWrap = document.getElementById('header_wrap');
         if (headerWrap) {
             headerWrap.remove();
-            console.log('Conditional: Removed #header_wrap because this is a subpage.');
+            console.log('Conditional: Removed #header_wrap because this is a sub-sub page.');
         }
     } else {
-        // isSubPage가 false일 때 실행되는 부분
+        // 메인 페이지 또는 서브페이지일 때 실행
         const headerWrap = document.getElementById('header_wrap');
         if (headerWrap) {
-            // #header_wrap의 높이를 100px로 설정
             headerWrap.style.height = '100px';
         }
 
-
-        // 검색 버튼 중앙 높이에 위치시키기
+        // 검색 버튼 수직 중앙 정렬
         const headerElement = document.getElementById('header');
-        if (!headerElement) {
-            console.warn('#header 요소를 찾을 수 없습니다.');
-            return;
+        if (headerElement && headerElement.parentElement) {
+            const parent = headerElement.parentElement;
+            parent.style.display = 'flex';
+            parent.style.alignItems = 'center';
+            console.log('Flexbox를 이용해 #header를 수직 중앙 정렬했습니다.');
         }
-
-        // 2. 부모 요소를 찾습니다. (가장 가까운 컨테이너)
-        const parent = headerElement.parentElement;
-        if (!parent) {
-            console.error('#header의 부모 요소를 찾을 수 없습니다.');
-            return;
-        }
-
-        // 3. 부모 요소에 Flexbox 속성을 적용하여 수직 가운데 정렬을 설정합니다.
-        parent.style.display = 'flex';
-        parent.style.alignItems = 'center'; // 수직 중앙 정렬
-
-        // 선택 사항: 부모 높이가 명확하지 않은 경우 전체 뷰포트를 사용하도록 설정
-        // parent.style.height = '100vh';
-
-        console.log('Flexbox를 이용해 #header를 수직 중앙 정렬했습니다.');
-
-
     }
 
+    // '.bo_v_tit' 요소에서 '다시보기' 텍스트 제거
+    document.querySelectorAll('.bo_v_tit').forEach(element => {
+        // 정규 표현식을 사용하여 모든 '다시보기' 문자열을 빈 문자열로 대체하고 앞뒤 공백 제거
+        if (element.textContent.includes('다시보기')) {
+            element.textContent = element.textContent.replace(/다시보기/g, '').trim();
+            console.log('Removed "다시보기" text from .bo_v_tit.');
+        }
+    });
+
+    // 홈화면의 첫 번째 '.slide_wrap' 제거
+    const firstSlideWrap = document.querySelector('.slide_wrap');
+    if (firstSlideWrap) {
+        firstSlideWrap.remove();
+        console.log('Removed the first .slide_wrap element.');
+    }
+    // 남은 Slide Wrap 제목 변경 로직
+    const slideWraps = document.querySelectorAll('.slide_wrap');
+    const newTitles = ['드라마', '영화', '예능', '애니메이션'];
+    slideWraps.forEach((wrap, index) => {
+        if (index < newTitles.length) {
+            const h2 = wrap.querySelector('h2');
+            if (h2) {
+                const moreLink = h2.querySelector('a.more');
+                const newTitleText = newTitles[index];
+
+                if (moreLink) {
+                    h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
+                    console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
+                } else {
+                    h2.textContent = newTitleText;
+                    console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
+                }
+            }
+        }
+    });
+    // =======================================================
 
 
+
+
+
+
+
+
+    // =======================================================
+    // 3. UI 요소 추가
     // =======================================================
+    // 검색 버튼 텍스트 추가 로직 및 인라인 스타일 강제 오버라이드
+    const searchButton = document.querySelector('a.btn_search');
+    if (searchButton) {
+
+        // 1. 텍스트를 담을 span 요소를 생성
+        const searchLabel = document.createElement('span');
+        searchLabel.textContent = ' 검색 ';
+        searchLabel.classList.add('search-label');
+
+        // 2. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
+        searchLabel.style.setProperty('font-size', '1.7em', 'important'); // <<-- 최종 폰트 크기 강제 적용
+
+        // 3. 버튼 아이콘 앞에 텍스트 추가
+        searchButton.prepend(searchLabel);
+        console.log('Added "검색하기" text to the search button with inline style overwrite.');
+    }
+
+    // 재생 페이지'.bo_v_mov'에 '동영상 재생하기' 버튼 추가 및 스타일 적용
+    document.querySelectorAll('div.bo_v_mov').forEach(container => {
+        // "동영상 재생하기" 버튼 생성
+        const playButton = document.createElement('button');
+        playButton.textContent = '▶️ 재생';
+        playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
+
+        // 버튼 스타일 강제 적용 (Netflix 스타일) - 폰트 크기 증가 및 가로 길이 축소 반영
+        playButton.style.cssText = `
+            background-color: #e50914 !important;
+            color: white !important;
+            padding: 10px 15px !important; /* 패딩 조정 */
+            border: none !important;
+            border-radius: 4px !important;
+            font-size: 24px !important; /* 폰트 크기 증가 */
+            cursor: pointer !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+            transition: background-color 0.2s !important;
+            width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
+            height: 60px !important;
+        `;
+
+        // 포커스/호버 효과 추가
+        playButton.onmouseover = playButton.onfocus = function() {
+            this.style.backgroundColor = '#f40612'; // 더 밝은 빨강
+        };
+        playButton.onmouseout = playButton.onblur = function() {
+            this.style.backgroundColor = '#e50914'; // 원래 빨강
+        };
+
+
+        // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
+        playButton.onclick = function(e) {
+            e.preventDefault();
+            console.log('동영상 재생하기 버튼 클릭됨.');
+
+            // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
+            // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
+            if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
+                NativeApp.handlePlayButtonClick();
+                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
+            } else {
+                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
+            }
+        };
+        // 컨테이너에 버튼 추가
+        container.appendChild(playButton);
+        console.log('Added "동영상 재생하기" button to .bo_v_mov.');
+    });
+    // =======================================================
+
+
+
+
 
 
 
     // =======================================================
-    // 1. D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
+    // 4. UI 요소 변경
     // =======================================================
+    // D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
     const style = document.createElement('style');
     style.innerHTML = `
-
-
-
 
         /* 🚨 [위치 최종 수정] 커스텀 알림 모달 스타일: 뷰포트 고정(Fixed) 및 중앙 정렬 */
         .custom-alert-backdrop {
@@ -172,7 +322,7 @@
         }
         /* =========================================================== */
 
-/* (기존 포커스 및 UI 스타일 유지) */
+        /* (기존 포커스 및 UI 스타일 유지) */
 
         /* =========================================================== */
         /* [FIX] Owl Carousel: Restore Sliding, Keep Aspect Ratio (2:3 assumed) */
@@ -308,207 +458,9 @@
 
 
     // =======================================================
-    // 2. 메인 페이지 (tvwiki) UI 정리 및 포커스 조정 로직
+    // 5. 기타
     // =======================================================
-
-    // ---------------------------------------------------
-    // [추가된 기능] '.bo_v_tit' 요소에서 '다시보기' 텍스트 제거
-    // ---------------------------------------------------
-    document.querySelectorAll('.bo_v_tit').forEach(element => {
-        // 정규 표현식을 사용하여 모든 '다시보기' 문자열을 빈 문자열로 대체하고 앞뒤 공백 제거
-        if (element.textContent.includes('다시보기')) {
-            element.textContent = element.textContent.replace(/다시보기/g, '').trim();
-            console.log('Removed "다시보기" text from .bo_v_tit.');
-        }
-    });
-    // ---------------------------------------------------
-
-    // ---------------------------------------------------
-    // [새로운 기능] '.bo_v_mov'에 '동영상 재생하기' 버튼 추가 및 스타일 수정
-    // ---------------------------------------------------
-    document.querySelectorAll('div.bo_v_mov').forEach(container => {
-        // "동영상 재생하기" 버튼 생성
-        const playButton = document.createElement('button');
-        playButton.textContent = '▶️ 재생';
-        playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
-
-        // 버튼 스타일 강제 적용 (Netflix 스타일) - 폰트 크기 증가 및 가로 길이 축소 반영
-        playButton.style.cssText = `
-            background-color: #e50914 !important;
-            color: white !important;
-            padding: 10px 15px !important; /* 패딩 조정 */
-            border: none !important;
-            border-radius: 4px !important;
-            font-size: 24px !important; /* 폰트 크기 증가 */
-            cursor: pointer !important;
-            font-weight: bold !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
-            transition: background-color 0.2s !important;
-            width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
-            height: 60px !important;
-        `;
-
-        // 포커스/호버 효과 추가
-        playButton.onmouseover = playButton.onfocus = function() {
-            this.style.backgroundColor = '#f40612'; // 더 밝은 빨강
-        };
-        playButton.onmouseout = playButton.onblur = function() {
-            this.style.backgroundColor = '#e50914'; // 원래 빨강
-        };
-
-        // ************************************************
-        // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
-        // ************************************************
-        playButton.onclick = function(e) {
-            e.preventDefault();
-            console.log('동영상 재생하기 버튼 클릭됨.');
-
-            // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
-            // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
-            if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
-                NativeApp.handlePlayButtonClick();
-                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
-            } else {
-                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
-            }
-        };
-        // ************************************************
-
-        // 컨테이너에 버튼 추가
-        container.appendChild(playButton);
-        console.log('Added "동영상 재생하기" button to .bo_v_mov.');
-    });
-    // ---------------------------------------------------
-
-
-    // .slide_wrap 내부의 '.title'을 제외한 모든 요소의 포커스 비활성화
-    document.querySelectorAll('.slide_wrap *').forEach(element => {
-        if (element.classList && !element.classList.contains('title') && !element.classList.contains('more')) {
-            element.setAttribute('tabindex', '-1');
-        }
-    });
-    console.log('Focus adjustment: Set tabindex=-1 for non-title elements within .slide_wrap.');
-
-    // 홈화면의 첫 번째 '.slide_wrap' 제거
-    const firstSlideWrap = document.querySelector('.slide_wrap');
-    if (firstSlideWrap) {
-        firstSlideWrap.remove();
-        console.log('Removed the first .slide_wrap element.');
-    }
-
-    // 남은 Slide Wrap 제목 변경 로직
-    const slideWraps = document.querySelectorAll('.slide_wrap');
-    const newTitles = ['드라마', '영화', '예능', '애니메이션'];
-
-    slideWraps.forEach((wrap, index) => {
-        if (index < newTitles.length) {
-            const h2 = wrap.querySelector('h2');
-            if (h2) {
-                const moreLink = h2.querySelector('a.more');
-                const newTitleText = newTitles[index];
-
-                if (moreLink) {
-                    h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
-                    console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
-                } else {
-                    h2.textContent = newTitleText;
-                    console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
-                }
-            }
-        }
-    });
-
-    // ---------------------------------------------------
-    // [추가된 기능] 검색 버튼 텍스트 추가 로직 및 인라인 스타일 강제 오버라이드
-    // ---------------------------------------------------
-    const searchButton = document.querySelector('a.btn_search');
-    if (searchButton) {
-        // 1. 인라인 스타일을 JS로 직접 덮어씌워서 CSS 충돌을 완전히 회피 (레이아웃 고정)
-        //searchButton.style.setProperty('align-items', 'center', 'important'); // <-- 복구된 핵심 레이아웃
-        //searchButton.style.setProperty('width', 'auto', 'important');
-        //searchButton.style.setProperty('display', 'flex', 'important'); // flex 강제 적용 (CSS에 이미 있지만 안전을 위해)
-
-
-        // 2. 텍스트를 담을 span 요소를 생성
-        const searchLabel = document.createElement('span');
-        searchLabel.textContent = ' 검색 ';
-        searchLabel.classList.add('search-label');
-
-        // 3. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
-        searchLabel.style.setProperty('font-size', '1.7em', 'important'); // <<-- 최종 폰트 크기 강제 적용
-
-        // 버튼 아이콘 앞에 텍스트 추가
-        searchButton.prepend(searchLabel);
-        console.log('Added "검색하기" text to the search button with inline style overwrite.');
-    }
-    // ---------------------------------------------------
-
-    // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
-    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on').forEach(element => {
-        element.setAttribute('tabindex', '-1');
-    });
-
-	const formElement = document.getElementById('fboardlist');
-		if (formElement) {
-			formElement.setAttribute('tabindex', '-1');
-		}
-
-	const searchElement= document.getElementById('sch_submit');
-		if (searchElement) {
-			searchElement.setAttribute('tabindex', '-1');
-		}
-
-
-
-
-    // 제거할 UI 요소
-    const elementsToRemove = [
-        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
-        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
-        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
-        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
-        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre', '#other_list ul li p'
-    ];
-
-    elementsToRemove.forEach(selector => {
-        document.querySelectorAll(selector).forEach(element => {
-            element.remove();
-        });
-    });
-
-
-    // 스타일 조정
-    const styleAdjustments = [
-        { selector: '.coordinates', height: '50px' },
-        { selector: '.title', height: '50px' },
-        { selector: '.main-ranking', height: '474px' },
-        { selector: '.playstart', padding: '0' },
-        { selector: '.frame-video', marginTop: '0' },
-        { selector: '.player-header', padding: '10px 0' },
-        { selector: '.video-remote', display: 'block', bottom: '60px', width: '150px' }
-    ];
-
-    styleAdjustments.forEach(item => {
-        document.querySelectorAll(item.selector).forEach(element => {
-            if (item.height) element.style.height = item.height;
-            if (item.padding) element.style.padding = item.padding;
-            if (item.marginTop) element.style.marginTop = item.marginTop;
-            if (item.display) element.style.display = item.display;
-            if (item.bottom) element.style.bottom = item.bottom;
-            if (item.width) element.style.width = item.width;
-        });
-    });
-
-    // 배너 이미지 숨기기 로직
-    function hideBannerImages() {
-        document.querySelectorAll('img').forEach(img => {
-            if (img.src.includes('banner')) {
-                img.style.display = 'none';
-            }
-        });
-    }
-
-    // 타이틀 및 로고 변경
+    // 타이틀 변경
     document.title = "Netflix";
     const logoLink = document.querySelector("a.logo");
     if (logoLink) {
@@ -519,7 +471,6 @@
             img.style.height = "auto";
         }
     }
-
     // 아이콘 변경 함수 호출
     const faviconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
     const appleIconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
@@ -543,16 +494,26 @@
     if (button) {
         button.click();
     }
-
-    // 페이지 로드 후 및 동적 변경 감지
-    hideBannerImages();
-    const observer = new MutationObserver(hideBannerImages);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-
-// ---------------------------------------------------
-
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -604,28 +565,28 @@
 
 
 
-document.querySelector('.btn_search').addEventListener('click', function (e) {
-    e.preventDefault();
+    document.querySelector('.btn_search').addEventListener('click', function (e) {
+        e.preventDefault();
 
-    const input = document.getElementById('sch_stx');
+        const input = document.getElementById('sch_stx');
 
-    // 입력창 표시 (숨겨져 있다면)
-    input.style.display = 'block';
+        // 입력창 표시 (숨겨져 있다면)
+        input.style.display = 'block';
 
-    // 짧은 딜레이 후 포커스
-    setTimeout(() => {
-        input.focus();
-        input.click();  // 모바일에서 키보드 강제 호출에 필요함
-    }, 50);
-});
+        // 짧은 딜레이 후 포커스
+        setTimeout(() => {
+            input.focus();
+            input.click();  // 모바일에서 키보드 강제 호출에 필요함
+        }, 50);
+    });
 
 
 
-document.forms["fsearchbox"].addEventListener("submit", function (e) {
-    const input = document.getElementById("sch_stx");
+    document.forms["fsearchbox"].addEventListener("submit", function (e) {
+        const input = document.getElementById("sch_stx");
 
-    if (!input.value.trim()) {
-        e.preventDefault();  // action 실행 막기
-        input.focus();       // 포커스 다시 주기 (선택)
-    }
+        if (!input.value.trim()) {
+            e.preventDefault();  // action 실행 막기
+            input.focus();       // 포커스 다시 주기 (선택)
+        }
 });
