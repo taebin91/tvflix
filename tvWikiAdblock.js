@@ -561,7 +561,7 @@
 			
 			
 			if (typeof NativeApp !== 'undefined' && NativeApp.showNeutralAlert) {
-                NativeApp.showNeutralAlert(message);
+                NativeApp.showNeutralAlert(String(message));
                 console.log('Called NativeApp.handlePlayButtonClick() on native side.');
             } else {
                 console.warn('NativeApp interface (handlePlayButtonClick) not found.');
