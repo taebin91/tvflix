@@ -214,7 +214,7 @@
 
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
         :focus {
-            position: relative !important;
+
             z-index: 9999 !important;
 
             outline: 4px solid #FFD700 !important;
@@ -299,7 +299,23 @@
             /* CSS도 충분히 높여서 혹시 모를 경우 대비 (JS에서 최종 오버라이드 됨) */
             font-size: 1.7em !important;
         }
+
+}
     `;
+
+
+
+
+
+
+const moreLink = document.querySelector('.more');
+moreLink.addEventListener('focus', e => {
+    const rect = moreLink.getBoundingClientRect();
+    moreLink.style.position = 'absolute';
+    moreLink.style.top = `${rect.top + window.scrollY}px`;
+    moreLink.style.left = `${rect.left + window.scrollX}px`;
+});
+
     document.head.appendChild(style);
     console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
 
@@ -649,4 +665,15 @@ document.querySelector('.btn_search').addEventListener('click', function (e) {
         input.focus();
         input.click();  // 모바일에서 키보드 강제 호출에 필요함
     }, 50);
+});
+
+
+
+document.forms["fsearchbox"].addEventListener("submit", function (e) {
+    const input = document.getElementById("sch_stx");
+
+    if (!input.value.trim()) {
+        e.preventDefault();  // action 실행 막기
+        input.focus();       // 포커스 다시 주기 (선택)
+    }
 });
