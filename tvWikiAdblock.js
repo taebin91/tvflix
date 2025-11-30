@@ -77,24 +77,26 @@
 
 
 
-        /* 🚨 [최종 수정] 커스텀 알림 모달 스타일: Flexbox 대신 Absolute Positioning + Transform 사용 */
+        /* 🚨 [위치 최종 수정] 커스텀 알림 모달 스타일: 뷰포트 고정(Fixed) 및 중앙 정렬 */
         .custom-alert-backdrop {
-            position: fixed !important; /* 뷰포트에 고정 */
+            position: fixed !important; /* 뷰포트에 고정되어 스크롤 시 따라옴 */
             top: 0 !important;
             left: 0 !important;
             width: 100% !important;
             height: 100% !important;
             background-color: rgba(0, 0, 0, 0.7) !important;
-            z-index: 10000 !important;
-            /* Flexbox 중앙 정렬 제거: Modal 자체에서 중앙 정렬을 처리 */
+            z-index: 10000 !important; /* Z-index를 높게 설정 */
             display: block !important;
+            /* 렌더링 최적화를 위한 힌트 추가 (종종 Fixed 버그 해결에 도움) */
+            will-change: transform, opacity;
         }
         .custom-alert-modal {
-            /* 🚨 이 모달 자체를 중앙에 위치시킵니다. */
+            /* 모달 자체를 중앙에 위치시킵니다. */
             position: absolute !important;
             top: 50% !important;
             left: 50% !important;
             transform: translate(-50%, -50%) !important;
+            z-index: 10001 !important; /* 배경보다 한 단계 더 높게 */
 
             background: #2c2c2c; /* 다크 모드 배경 */
             color: #f0f0f0; /* 밝은 텍스트 */
@@ -172,8 +174,6 @@
         /* =========================================================== */
         /* [FIX] Owl Carousel: Restore Sliding, Keep Aspect Ratio (2:3 assumed) */
 
-        /* 1. Owl Item의 너비/마진에 대한 강제 설정 (4개 강제) 제거 */
-        /* -> 이제 Owl Carousel JS가 계산한 5개 아이템 너비를 사용합니다. */
 
         /* 2. Owl Stage의 transform 및 width 초기화 제거 */
         /* -> Owl Carousel JS가 슬라이딩을 위해 설정하는 transform을 복구합니다. */
@@ -603,6 +603,9 @@
             actions.appendChild(okButton);
             modal.appendChild(actions);
             backdrop.appendChild(modal);
+
+            // 🚨 중요: 모달을 문서의 최상위 요소인 <body>에 추가하여
+            // fixed positioning이 깨지는 것을 방지합니다.
             document.body.appendChild(backdrop);
 
             // D-Pad 탐색을 위해 버튼에 포커스 설정
@@ -629,3 +632,21 @@
     };
 
     console.log('Native alert/confirm functions have been overridden with a custom modal titled "알림".');
+
+
+
+
+document.querySelector('.btn_search').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const input = document.getElementById('sch_stx');
+
+    // 입력창 표시 (숨겨져 있다면)
+    input.style.display = 'block';
+
+    // 짧은 딜레이 후 포커스
+    setTimeout(() => {
+        input.focus();
+        input.click();  // 모바일에서 키보드 강제 호출에 필요함
+    }, 50);
+});
