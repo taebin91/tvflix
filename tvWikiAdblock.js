@@ -356,12 +356,19 @@
             object-fit: cover !important; /* 이미지 잘림 없이 컨테이너에 맞춤 */
         }
 
+
+
         /* 5. 제목(.title) 높이도 줄어든 크기에 맞게 조정 */
         /* (이 부분은 비율과 관계 없지만 전체 세로 길이 축소를 위해 유지) */
         .owl-carousel .owl-item .title {
             height: 35px !important;
             line-height: 1.2 !important;
             font-size: 14px !important;
+        }
+        a.title2{
+                    height: 35px !important;
+            line-height: 1.2 !important;
+            font-size: 19px !important;
         }
         /* =========================================================== */
 
