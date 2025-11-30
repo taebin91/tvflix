@@ -384,18 +384,13 @@
         /* =========================================================== */
 
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
-        :focus {
-
+        :focus
+        :focus * {
             z-index: 9999 !important;
-            background-color: #FFD700 !important; /* 노란색 배경 */
-            outline: 4px solid #FFD700 !important;
-            outline-offset: 0px !important;
-
-            box-shadow:
-                0 0 0 4px #FFD700 inset,
-                0 0 8px rgba(255, 215, 0, 1) !important;
-
-            transition: outline-color 0.2s, box-shadow 0.2s;
+            background-color: #FFD700 !important; /* 배경 노랑 */
+            color: #111 !important;               /* 글자 어둡게 */
+            outline: none !important;             /* outline 제거 */
+            box-shadow: none !important;          /* 그림자 제거 */
         }
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
