@@ -214,13 +214,16 @@
 
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
         :focus {
-            //position: fixed !important; /* 화면 기준 최상위 */
-            z-index: 2147483647 !important; /* 브라우저 최대값 */
+
+            z-index: 9999 !important;
+
             outline: 4px solid #FFD700 !important;
             outline-offset: 0px !important;
+
             box-shadow:
                 0 0 0 4px #FFD700 inset,
                 0 0 8px rgba(255, 215, 0, 1) !important;
+
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
 
@@ -296,23 +299,7 @@
             /* CSS도 충분히 높여서 혹시 모를 경우 대비 (JS에서 최종 오버라이드 됨) */
             font-size: 1.7em !important;
         }
-
-}
     `;
-
-
-
-
-
-
-const moreLink = document.querySelector('.more');
-moreLink.addEventListener('focus', e => {
-    const rect = moreLink.getBoundingClientRect();
-    moreLink.style.position = 'absolute';
-    moreLink.style.top = `${rect.top + window.scrollY}px`;
-    moreLink.style.left = `${rect.left + window.scrollX}px`;
-});
-
     document.head.appendChild(style);
     console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
 
@@ -645,7 +632,6 @@ moreLink.addEventListener('focus', e => {
     };
 
     console.log('Native alert/confirm functions have been overridden with a custom modal titled "알림".');
-
 
 
 
