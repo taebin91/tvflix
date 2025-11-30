@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name        tving Full Auto Login & Fullscreen
+// @name        tving Auto Login & Fullscreen
 // @namespace   Violentmonkey Scripts
 // @match       https://www.tving.com/live/C01582*
 // @include     /^https?:\/\/[^/]*tving[^/]*\/.*$/
 // @grant       none
-// @version     1.3
+// @version     1.4
 // @author      -
-// @description SPA 구조 대응: 자동 로그인 + 전체화면
+// @description SPA 대응: 자동 로그인 + 전체화면
 // ==/UserScript==
 
 (function() {
@@ -37,9 +37,19 @@
             const loginBtn = Array.from(document.querySelectorAll('button[type="submit"]'))
                 .find(btn => btn.innerText.includes('로그인하기'));
             if (loginBtn) loginBtn.click();
+            console.log('자동 로그인 시도 완료');
         }
     }
 
+    function clickFullscreenButton() {
+        const fullscreenBtn = document.querySelector('button.con__fullscreen[aria-label="전체화면"]');
+        if (fullscreenBtn) {
+            fullscreenBtn.click();
+            console.log('전체화면 버튼 클릭 완료');
+        }
+    }
+
+    // 로그인 폼 로딩 감지
     const loginObserver = new MutationObserver((mutations, obs) => {
         const idInput = document.querySelector('input[name="id"]');
         const pwInput = document.querySelector('input[name="password"]');
@@ -50,8 +60,27 @@
             obs.disconnect();
         }
     });
-
     loginObserver.observe(document.body, { childList: true, subtree: true });
+
+    // 전체화면 버튼 감지
+    const fullscreenObserver = new MutationObserver((mutations, obs) => {
+        const fullscreenBtn = document.querySelector('button.con__fullscreen[aria-label="전체화면"]');
+        if (fullscreenBtn) {
+            clickFullscreenButton();
+            obs.disconnect();
+        }
+    });
+    fullscreenObserver.observe(document.body, { childList: true, subtree: true });
 
 })();
 
+
+// 전체화면 버튼 자동 클릭
+const fullscreenInterval = setInterval(() => {
+    const btn = document.querySelector('button.con__fullscreen[aria-label="전체화면"]');
+    if (btn) {
+        btn.click();
+        console.log('전체화면 버튼 클릭 완료');
+        clearInterval(fullscreenInterval);
+    }
+}, 500);
