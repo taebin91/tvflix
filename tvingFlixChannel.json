@@ -17,8 +17,8 @@
       "url": "https://hls-live.mbn.co.kr/mbn-on-air/600k/playlist.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cCo6Ly9obHMtbGl2ZS5tYm4uY28ua3IvKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc2NDU2ODUyOX0sIklwQWRkcmVzcyI6eyJBV1M6U291cmNlSXAiOiIwLjAuMC4wLzAifX19XX0_&Signature=pE5q-8uyMwp~aLmhVf5MgFDmuICZbb846y681oWSayunmPsaxmYVukYnTk-ZflfPhhU~UDo1ovKZETfKg-XrxpgyHEdN6utZbB6yLlFqCGBLOuT3cUSKaGHLNW-en-hjONpmsJ7xaHQj2X4BsEPxAv0SScRHMS4KtADTDRgJAWI_&Key-Pair-Id=pub_hls-live.mbn.co.kr"
     },
     {
-      "name": "TVN",
-      "url": "https://www.tving.com/live/C00551"
+      "name": "TV조선",
+      "url": "https://broadcast.tvchosun.com/onair/on.cstv"
     },
     {
       "name": "YTN",
