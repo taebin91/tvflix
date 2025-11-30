@@ -633,8 +633,8 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.position = 'absolute';
     focusOverlay.style.top = `${rect.top + window.scrollY}px`;
     focusOverlay.style.left = `${rect.left + window.scrollX}px`;
-    focusOverlay.style.width = `${rect.width}px`;
-    focusOverlay.style.height = `${rect.height}px`;
+    focusOverlay.style.width = `${rect.width+20}px`;
+    focusOverlay.style.height = `${rect.height+20}px`;
 
     focusOverlay.style.color = '#000'; // 글자 색
     focusOverlay.style.fontWeight = 'bold';
