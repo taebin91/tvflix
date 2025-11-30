@@ -626,8 +626,8 @@ document.addEventListener('focusin', (e) => {
 
     // 원본을 투명하게 만들기
     el.style.opacity = '0';       // 배경, 글자 모두 투명
-    el.style.color = 'transparent';
-    el.style.textShadow = 'none'; // 혹시 그림자도 제거
+    //el.style.color = 'transparent';
+    //el.style.textShadow = 'none'; // 혹시 그림자도 제거
 
     // 포커스 오버레이 생성
     focusOverlay = document.createElement('div');
