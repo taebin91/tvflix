@@ -641,7 +641,7 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
     focusOverlay.style.display = 'flex';
     focusOverlay.style.alignItems = 'center';
-    //focusOverlay.style.justifyContent = 'center';
+    focusOverlay.style.justifyContent = 'center';
     focusOverlay.style.zIndex = '999999';
     focusOverlay.style.pointerEvents = 'none';
     focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
@@ -656,8 +656,6 @@ document.addEventListener('focusout', (e) => {
 
     // 원본 복원
     el.style.opacity = '';
-    el.style.color = '';
-    el.style.textShadow = '';
 
     // 오버레이 제거
     if (focusOverlay) {
