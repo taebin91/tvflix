@@ -10,6 +10,9 @@
 // @grant       none
 // ==/UserScript==
 
+
+
+
 (function() {
     'use strict';
 
@@ -446,9 +449,16 @@
     });
 
 	const formElement = document.getElementById('fboardlist');
-    if (formElement) {
-        formElement.setAttribute('tabindex', '-1');
+		if (formElement) {
+			formElement.setAttribute('tabindex', '-1');
 		}
+
+	const searchElement= document.getElementById('sch_submit');
+		if (searchElement) {
+			searchElement.setAttribute('tabindex', '-1');
+		}
+
+
 
 
     // 제거할 UI 요소
