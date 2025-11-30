@@ -388,14 +388,11 @@
 
             z-index: 9999 !important;
             background-color: #1E90FF !important;/* Dodger Blue */
-            //padding: 5px 10px !important;
-            border: 0px solid #000 !important;
-            border-radius: 0px !important;
-            outline: 4px solid #1E90FF !important;/* Dodger Blue */
-            outline-offset: 0px !important;
+            //outline: 4px solid #1E90FF !important;/* Dodger Blue */
+            //outline-offset: 0px !important;
             box-shadow:
                 0 0 0 4px #1E90FF inset,
-                0 0 8px rgba(30,144,255,1) !important;
+                0 0 8px #1E90FF !important;
             transition: outline-color 0.2s, box-shadow 0.2s !important;
         }
 
