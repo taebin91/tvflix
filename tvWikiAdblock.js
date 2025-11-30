@@ -626,8 +626,6 @@ document.addEventListener('focusin', (e) => {
 
     // 원본을 투명하게 만들기
     el.style.opacity = '0';       // 배경, 글자 모두 투명
-    //el.style.color = 'transparent';
-    //el.style.textShadow = 'none'; // 혹시 그림자도 제거
 
     // 포커스 오버레이 생성
     focusOverlay = document.createElement('div');
@@ -640,14 +638,14 @@ document.addEventListener('focusin', (e) => {
 
     focusOverlay.style.color = '#000'; // 글자 색
     focusOverlay.style.fontWeight = 'bold';
-    focusOverlay.style.background = 'rgba(255, 215, 0, 0.7)'; // 포커스 배경
+    focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
     focusOverlay.style.display = 'flex';
     focusOverlay.style.alignItems = 'center';
     focusOverlay.style.justifyContent = 'center';
     focusOverlay.style.zIndex = '999999';
     focusOverlay.style.pointerEvents = 'none';
-    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
-    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
+    //focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
+    //focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
     focusOverlay.style.padding = window.getComputedStyle(el).padding;
 
     document.body.appendChild(focusOverlay);
