@@ -384,19 +384,22 @@
         /* =========================================================== */
 
         /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
-        :focus {
+:focus {
+    z-index: 9999 !important;
 
-            z-index: 9999 !important;
+    /* Outline 제거 */
+    outline: none !important;
 
-            outline: 4px solid #FFD700 !important;
-            outline-offset: 0px !important;
+    /* 요소 안쪽까지 꽉 채워진 노란색 테두리 */
+    box-shadow:
+        inset 0 0 0 4px #FFD700, /* 내부 테두리 */
+        0 0 0 0px rgba(255, 215, 0, 0); /* 외부 그림자 제거 */
 
-            box-shadow:
-                0 0 0 4px #FFD700 inset,
-                0 0 8px rgba(255, 215, 0, 1) !important;
+    /* 요소 크기 계산 시 padding 포함 */
+    box-sizing: border-box !important;
 
-            transition: outline-color 0.2s, box-shadow 0.2s;
-        }
+    transition: box-shadow 0.2s;
+}
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
