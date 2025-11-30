@@ -441,7 +441,7 @@
     // ---------------------------------------------------
 
     // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
-    document.querySelectorAll('a.img, img, img.lazy, iframe').forEach(element => {
+    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
 
@@ -558,18 +558,18 @@
         // 이미 모달이 떠 있다면 새 모달을 띄우지 않음 (중첩 방지)
         if (document.querySelector('.custom-alert-backdrop')) {
             console.warn('Attempted to show multiple alerts. Skipping new alert.');
-			
-			
+
+
 			if (typeof NativeApp !== 'undefined' && NativeApp.showNeutralAlert) {
                 NativeApp.showNeutralAlert(String(message));
                 console.log('Called NativeApp.handlePlayButtonClick() on native side.');
             } else {
                 console.warn('NativeApp interface (handlePlayButtonClick) not found.');
             }
-			
 
-			
-			
+
+
+
             return isConfirm ? false : undefined;
         }
     }
