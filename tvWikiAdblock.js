@@ -217,7 +217,7 @@
             //position: fixed !important; /* 화면 기준 최상위 */
             z-index: 2147483647 !important; /* 브라우저 최대값 */
             outline: 4px solid #FFD700 !important;
-            outline-offset: 1px !important;
+            outline-offset: 0px !important;
             box-shadow:
                 0 0 0 4px #FFD700 inset,
                 0 0 8px rgba(255, 215, 0, 1) !important;
