@@ -558,61 +558,20 @@
         // 이미 모달이 떠 있다면 새 모달을 띄우지 않음 (중첩 방지)
         if (document.querySelector('.custom-alert-backdrop')) {
             console.warn('Attempted to show multiple alerts. Skipping new alert.');
+			
+			
+			if (typeof NativeApp !== 'undefined' && NativeApp.showNeutralAlert) {
+                NativeApp.showNeutralAlert(message);
+                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
+            } else {
+                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
+            }
+			
+
+			
+			
             return isConfirm ? false : undefined;
         }
-
-        return new Promise(resolve => {
-            const backdrop = document.createElement('div');
-            backdrop.className = 'custom-alert-backdrop';
-
-            const modal = document.createElement('div');
-            modal.className = 'custom-alert-modal';
-
-            // 고정된 제목: 사용자가 요청한 '알림'
-            const title = document.createElement('div');
-            title.className = 'custom-alert-title';
-            title.textContent = '알림';
-
-            const msg = document.createElement('div');
-            msg.className = 'custom-alert-message';
-            msg.textContent = message;
-
-            const actions = document.createElement('div');
-            actions.className = 'custom-alert-actions';
-
-            const okButton = document.createElement('button');
-            okButton.textContent = isConfirm ? '확인' : '닫기';
-            okButton.onclick = () => {
-                backdrop.remove();
-                resolve(true); // alert이거나 confirm에서 확인을 누른 경우
-            };
-
-            modal.appendChild(title);
-            modal.appendChild(msg);
-
-            if (isConfirm) {
-                const cancelButton = document.createElement('button');
-                cancelButton.textContent = '취소';
-                cancelButton.onclick = () => {
-                    backdrop.remove();
-                    resolve(false); // confirm에서 취소를 누른 경우
-                };
-                actions.appendChild(cancelButton);
-            }
-
-            actions.appendChild(okButton);
-            modal.appendChild(actions);
-            backdrop.appendChild(modal);
-
-            // 🚨 중요: 모달을 문서의 최상위 요소인 <body>에 추가하여
-            // fixed positioning이 깨지는 것을 방지합니다.
-            document.body.appendChild(backdrop);
-
-            // D-Pad 탐색을 위해 버튼에 포커스 설정
-            setTimeout(() => {
-                okButton.focus();
-            }, 0);
-        });
     }
 
     // 네이티브 window.alert 덮어쓰기
