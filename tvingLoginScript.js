@@ -98,3 +98,14 @@ const soundButtonInterval = setInterval(() => {
         clearInterval(soundButtonInterval);
     }
 }, 500);
+
+// 광고 건너뛰기 버튼 자동 클릭
+const adSkipInterval = setInterval(() => {
+    const adBtn = Array.from(document.querySelectorAll('button.ad-skip-btn'))
+        .find(btn => btn.innerText.includes('광고 건너뛰기'));
+
+    if (adBtn) {
+        adBtn.click();
+        console.log('광고 건너뛰기 버튼 클릭 완료');
+    }
+}, 1000);
