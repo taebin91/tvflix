@@ -84,3 +84,17 @@ const fullscreenInterval = setInterval(() => {
         clearInterval(fullscreenInterval);
     }
 }, 500);
+
+
+// 소리 켜기 버튼 자동 클릭
+const soundButtonInterval = setInterval(() => {
+    // 버튼 내부 span 텍스트로 식별
+    const soundBtn = Array.from(document.querySelectorAll('button'))
+        .find(btn => btn.innerText.includes('클릭하여 소리켜기'));
+
+    if (soundBtn) {
+        soundBtn.click();
+        console.log('소리 켜기 버튼 클릭 완료');
+        clearInterval(soundButtonInterval);
+    }
+}, 500);
