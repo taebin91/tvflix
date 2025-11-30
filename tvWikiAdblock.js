@@ -640,12 +640,12 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.fontWeight = 'bold';
     focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
     focusOverlay.style.display = 'flex';
-    focusOverlay.style.alignItems = 'center';
+    //focusOverlay.style.alignItems = 'center';
     focusOverlay.style.justifyContent = 'center';
     focusOverlay.style.zIndex = '999999';
     focusOverlay.style.pointerEvents = 'none';
-    //focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
-    //focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
+    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
+    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
     focusOverlay.style.padding = window.getComputedStyle(el).padding;
 
     document.body.appendChild(focusOverlay);
