@@ -387,12 +387,11 @@
         :focus {
 
             z-index: 9999 !important;
-background-color: #1E90FF; /* Dodger Blue */
-outline: 4px solid #1E90FF;
-box-shadow: 0 0 0 4px #1E90FF inset, 0 0 8px rgba(30,144,255,1);
-color: white !important;
-
-            transition: outline-color 0.2s, box-shadow 0.2s;
+            background-color: #1E90FF; !important/* Dodger Blue */
+            outline: 4px solid #1E90FF; !important/* Dodger Blue */
+            outline-offset: 0px !important;
+            box-shadow: 0 0 0 4px #1E90FF inset, 0 0 8px rgba(30,144,255,1); !important
+            transition: outline-color 0.2s, box-shadow 0.2s; !important
         }
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
