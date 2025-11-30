@@ -624,10 +624,12 @@ document.addEventListener('focusin', (e) => {
     const el = e.target;
     const rect = el.getBoundingClientRect();
 
-    // 원래 요소 숨기기
-    el.style.visibility = 'hidden';
+    // 원본을 투명하게 만들기
+    el.style.opacity = '0';       // 배경, 글자 모두 투명
+    el.style.color = 'transparent';
+    el.style.textShadow = 'none'; // 혹시 그림자도 제거
 
-    // 새로운 레이어 생성
+    // 포커스 오버레이 생성
     focusOverlay = document.createElement('div');
     focusOverlay.textContent = el.textContent; // 글자 복사
     focusOverlay.style.position = 'absolute';
@@ -637,30 +639,33 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.height = `${rect.height}px`;
 
     focusOverlay.style.color = '#000'; // 글자 색
-    focusOverlay.style.fontWeight = 'bold'; // 볼드
+    focusOverlay.style.fontWeight = 'bold';
+    focusOverlay.style.background = 'rgba(255, 215, 0, 0.7)'; // 포커스 배경
     focusOverlay.style.display = 'flex';
     focusOverlay.style.alignItems = 'center';
     focusOverlay.style.justifyContent = 'center';
-    focusOverlay.style.background = 'rgba(255, 215, 0, 0.7)'; // 포커스 배경
     focusOverlay.style.zIndex = '999999';
-    focusOverlay.style.pointerEvents = 'none'; // 클릭 방해하지 않도록
-    focusOverlay.style.padding = window.getComputedStyle(el).padding; // 패딩 복사
+    focusOverlay.style.pointerEvents = 'none';
     focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
     focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
+    focusOverlay.style.padding = window.getComputedStyle(el).padding;
+
     document.body.appendChild(focusOverlay);
 });
 
 document.addEventListener('focusout', (e) => {
     const el = e.target;
 
-    // 새로 만든 레이어 제거
+    // 원본 복원
+    el.style.opacity = '';
+    el.style.color = '';
+    el.style.textShadow = '';
+
+    // 오버레이 제거
     if (focusOverlay) {
         focusOverlay.remove();
         focusOverlay = null;
     }
-
-    // 원래 요소 다시 보이기
-    el.style.visibility = '';
 });
 
 
