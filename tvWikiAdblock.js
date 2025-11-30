@@ -136,6 +136,17 @@
             }
         }
     });
+
+    //재생 페이지에서 다른 회차 썸네일 제거
+    // class가 searchText로 시작하는 모든 li 선택
+    const liElements = document.querySelectorAll('li[class^="searchText"]');
+    liElements.forEach(li => {
+        const img = li.querySelector('img');
+        if (img) {
+            img.remove();
+            console.log('이미지 제거 완료:', img);
+        }
+    });
     // =======================================================
 
 
