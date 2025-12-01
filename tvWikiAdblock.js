@@ -201,10 +201,10 @@
 
         // 포커스/호버 효과 추가
         playButton.onmouseover = playButton.onfocus = function() {
-            this.style.backgroundColor = '#f40612'; // 더 밝은 빨강
+            this.style.backgroundColor = '#552E00'; // 더 밝은 빨강
         };
         playButton.onmouseout = playButton.onblur = function() {
-            this.style.backgroundColor = '#e50914'; // 원래 빨강
+            this.style.backgroundColor = '#552E00'; // 원래 빨강
         };
 
 
@@ -390,12 +390,12 @@
         :focus {
 
             z-index: 9999 !important;
-            background-color: #FFD700 !important; /* 노란색 배경 */
-            outline: 4px solid #FFD700 !important;
+            background-color: #552E00 !important; /* 노란색 배경 */
+            outline: 4px solid #552E00 !important;
             outline-offset: 0px !important;
 
             box-shadow:
-                0 0 0 400px #FFD700 inset,
+                0 0 0 400px #552E00 inset,
                 0 0 400px rgba(255, 215, 0, 1) !important;
 
             transition: outline-color 0.2s, box-shadow 0.2s;
@@ -630,9 +630,9 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.left = `${rect.left + window.scrollX}px`;
     focusOverlay.style.width = `${rect.width}px`;
     focusOverlay.style.height = `${rect.height+30}px`;
-    focusOverlay.style.color = '#D2B48C'; // 글자 색
+    focusOverlay.style.color = '#FFF'; // 글자 색
     focusOverlay.style.fontWeight = 'bold';
-    focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
+    focusOverlay.style.background = '#552E00'; // 포커스 배경
     focusOverlay.style.display = 'flex';
     focusOverlay.style.alignItems = 'center';
     focusOverlay.style.justifyContent = 'center';
