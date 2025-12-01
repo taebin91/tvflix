@@ -517,6 +517,32 @@ const mainPageUrl = "tvwiki4.net";
     if (button) {
         button.click();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    window.function testFunc() {
+    NativeApp.jsLog("함수 테스트");
+  }
+
+
+
+
+
+
+
+
 })();
 
 
@@ -710,10 +736,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-function testFunc() {
 
-  NativeApp.jsLog("함수 테스트");
-}
 
 
 
@@ -800,4 +823,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020730");
+NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020734");
