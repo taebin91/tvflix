@@ -391,7 +391,7 @@
 
             z-index: 9999 !important;
             background-color: #552E00 !important; /* 노란색 배경 */
-            focusOverlay.style.outline = '4px solid #FFD700' !important;
+            outline: 4px solid #FFD700 !important;
             outline-offset: 0px !important;
 
             box-shadow:
