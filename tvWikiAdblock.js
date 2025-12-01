@@ -682,5 +682,5 @@ window.addEventListener('load', () => {
         const firstLink = document.querySelector('img');
         if (firstLink) firstLink.focus();
       console.log("페이지 첫 로드 포커스");
-    }, 100); // 100ms 정도 지연
+    }, 2000); // 100ms 정도 지연
 });
