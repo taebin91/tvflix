@@ -532,7 +532,7 @@ const mainPageUrl = "tvwiki4.net";
 
 
 
-    window.textFunc = function() {
+    window.testFunc = function() {
     NativeApp.jsLog("함수 테스트");
   }
 
@@ -823,4 +823,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020740");
+NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020745");
