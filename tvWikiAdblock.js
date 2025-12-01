@@ -720,8 +720,8 @@ document.addEventListener('keydown', (e) => {
       e.key === 'Back' ||         // 일부 환경
       e.key === 'BrowserBack' ||  // 일부 브라우저
       e.key === 'Escape' ||       // ESC
-      e.key === 'Backspace' ||    // 때로 Backspace가 쓰이기도 함
-      e.keyCode === 8 ||          // Backspace
+      //e.key === 'Backspace' ||    // 때로 Backspace가 쓰이기도 함
+      //e.keyCode === 8 ||          // Backspace
       e.keyCode === 27;           // ESC
 
 
@@ -729,7 +729,8 @@ document.addEventListener('keydown', (e) => {
   if (isBackKey){
   // 1. 검색창이 활성화 상태일때
     const isSearchLayerOpen = document.querySelector('.search_layer.active') !== null;// 검색창이 활성화 상태인지 여부 (true / false)
-    console.log(isSearchLayerOpen);
+    console.log("ESC 감지");
+    NativeApp.jsLog("ESC 감지");
 
     if (isSearchLayerOpen){
       document.querySelector('.search_layer')?.classList.remove('active');
@@ -749,6 +750,7 @@ document.addEventListener('keydown', (e) => {
       e.preventDefault();
       e.stopPropagation();
       console.log("검색창 닫고 반환");
+      NativeApp.jsLog("검색창 닫고 반환);
       return;
     }
 
@@ -772,6 +774,7 @@ document.addEventListener('keydown', (e) => {
       e.preventDefault();
       e.stopPropagation();
       console.log("드롭다운 닫고 반환");
+      NativeApp.jsLog("드롭다운 받고 반환);
       return;
     }
 
