@@ -676,11 +676,10 @@ document.addEventListener('focusout', (e) => {
     }
 });
 
-// 페이지 첫 시작시 검색 버튼 (btn_search 요소)로 포커스
-const btnSearch = document.querySelector('a.btn_search');
+const firstLink = document.querySelector('a');
 
-if (btnSearch) {
-    btnSearch.focus({ preventScroll: false }); // 화면 스크롤 이동 허용
+if (firstLink) {
+    // 포커스 가능하게 만들기 (tabindex 없으면 기본적으로 포커스 가능)
+    firstLink.focus();
 }
-
 
