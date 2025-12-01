@@ -707,3 +707,31 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+
+document.addEventListener('keydown', (e) => {
+    const layer = document.querySelector('.filter_layer');
+
+    if (!layer) return;
+
+    const isOpen = layer.classList.contains('active');
+
+    // 뒤로가기 버튼 감지 (Back/Escape)
+    if (e.key === "Back" || e.key === "Escape") {
+        if (isOpen) {
+            // 닫기
+            layer.classList.remove('active');
+            layer.style.visibility = 'hidden';
+            layer.style.left = '-9999px';
+
+            // 원래 버튼으로 포커스 복귀
+            const btn = document.querySelector('.btn_filter');
+            btn?.focus();
+
+            e.preventDefault();
+            e.stopPropagation();
+        } else {
+            // 이미 닫혀 있으면 뒤로가기 동작 허용
+        }
+    }
+});
