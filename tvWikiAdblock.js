@@ -12,6 +12,8 @@
 
 
 
+const mainPageUrl = "tvwiki4.net";
+
 
 (function() {
     'use strict';
@@ -771,6 +773,19 @@ document.addEventListener('keydown', (e) => {
       e.stopPropagation();
       console.log("드롭다운 닫고 반환");
       return;
+    }
+
+
+
+    //3. 검색창이나 드롭다운 활성화 상태가 아니라면 뒤로가기 실행
+    const host = location.hostname.replace(/^www\./, "");
+    if (host === mainPageUrl ) {
+      // 안드로이드 네이티브 함수 호출
+      if (window.Android && typeof Android.finishApp === "function") {
+        Android.finishApp();
+      } else {
+        history.back();
+      }
     }
   }
 });
