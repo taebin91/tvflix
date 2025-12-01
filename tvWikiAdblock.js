@@ -619,6 +619,9 @@ document.addEventListener('focusin', (e) => {
     const el = e.target;
     const rect = el.getBoundingClientRect();
 
+    const target = e.target.closest && e.target.closest('.title, .title2');
+    if (!target) return; // 해당 클래스가 아니면 무시
+
     // 원본을 투명하게 만들기
     el.style.opacity = '0';       // 배경, 글자 모두 투명
 
