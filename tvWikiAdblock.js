@@ -678,7 +678,7 @@ document.addEventListener('focusout', (e) => {
 
 
 
-
+//크롬캐스트에서 드롭다운 동작 안하는 문제 수정
 document.querySelectorAll('.filter_layer a').forEach(a => {
     a.setAttribute('tabindex', '0');
 });
@@ -732,21 +732,14 @@ document.addEventListener('keydown', (e) => {
         e.keyCode === 27;           // ESC
 
     if (isBackKey && isOpen) {
+
+        console.log("esc키 입력: 드롭다운열려있음");
         // 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
         layer.classList.remove('active');
-        try { layer.style.display = 'none'; } catch(e){}
-        try { layer.style.visibility = 'hidden'; } catch(e){}
-        try { layer.style.left = '-9999px'; } catch(e){}
-        try { layer.style.opacity = '0'; } catch(e){}
-
         // 원래 버튼으로 포커스 복귀
-        const btn = document.querySelector('.btn_filter');
-        if (btn) {
-            // tabindex 확보 (스크립트로만 포커싱 가능할 경우)
-            if (!btn.hasAttribute('tabindex')) btn.setAttribute('tabindex', '-1');
-            btn.focus();
-        }
-
+        const btn = document.querySelector('.filter_layer');
+        btn.focus();
+        btn.click();
         e.preventDefault();
         e.stopPropagation();
     }
