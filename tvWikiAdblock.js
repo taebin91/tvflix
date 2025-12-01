@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020829";
+const scriptVersion = "2512020835";
 
 
 (function() {
@@ -521,7 +521,7 @@ const scriptVersion = "2512020829";
     }
 
 
-    // 2. 드롭다운 선택중 뒤로가기 눌렀을 때 동작
+    // 2. 드롭다운 선택중 ESC, 뒤로가기 눌렀을 때 동작
     const layer = document.querySelector('.filter_layer');
     if (!layer) return;
     const computed = window.getComputedStyle(layer);
@@ -546,6 +546,10 @@ const scriptVersion = "2512020829";
 
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
+
+    NativeApp.jsLog(host);
+    NativeApp.jsLog(mainPageUrl);
+
     if (host === mainPageUrl ) {
       NativeApp.finishApp();
     }
