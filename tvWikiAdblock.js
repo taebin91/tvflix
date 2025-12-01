@@ -682,3 +682,28 @@ document.addEventListener('focusout', (e) => {
 document.querySelectorAll('.filter_layer a').forEach(a => {
     a.setAttribute('tabindex', '0');
 });
+
+document.addEventListener('keydown', (e) => {
+    const active = document.activeElement;
+
+    if (active.classList.contains('btn_filter')) {
+        const layer = active.nextElementSibling; // .filter_layer
+        if (!layer) return;
+
+        if (e.key === 'ArrowDown') {
+            const first = layer.querySelector('a');
+            first?.focus();
+            e.preventDefault();
+        }
+    } else if (active.closest('.filter_layer')) {
+        if (e.key === 'ArrowDown') {
+            const next = active.nextElementSibling;
+            if (next) next.focus();
+            e.preventDefault();
+        } else if (e.key === 'ArrowUp') {
+            const prev = active.previousElementSibling;
+            if (prev) prev.focus();
+            e.preventDefault();
+        }
+    }
+});
