@@ -709,29 +709,45 @@ document.addEventListener('keydown', (e) => {
 });
 
 
+
 document.addEventListener('keydown', (e) => {
     const layer = document.querySelector('.filter_layer');
-
     if (!layer) return;
 
-    const isOpen = layer.classList.contains('active');
+    // 열린 상태 판정: class, inline style, computed style 등 다 검사
+    const computed = window.getComputedStyle(layer);
+    const hasActiveClass = layer.classList && layer.classList.contains('active');
+    const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
+    const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
+    const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
+    const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
 
-    // 뒤로가기 버튼 감지 (Back/Escape)
-    if (e.key === "Back" || e.key === "Escape") {
-        if (isOpen) {
-            // 닫기
-            layer.classList.remove('active');
-            layer.style.visibility = 'hidden';
-            layer.style.left = '-9999px';
+    // 뒤로/취소 키 감지 (Chromecast/Android/WebView 변종 포함)
+    const isBackKey =
+        e.key === 'Back' ||         // 일부 환경
+        e.key === 'BrowserBack' ||  // 일부 브라우저
+        e.key === 'Escape' ||       // ESC
+        e.key === 'Backspace' ||    // 때로 Backspace가 쓰이기도 함
+        e.keyCode === 8 ||          // Backspace
+        e.keyCode === 27;           // ESC
 
-            // 원래 버튼으로 포커스 복귀
-            const btn = document.querySelector('.btn_filter');
-            btn?.focus();
+    if (isBackKey && isOpen) {
+        // 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
+        layer.classList.remove('active');
+        try { layer.style.display = 'none'; } catch(e){}
+        try { layer.style.visibility = 'hidden'; } catch(e){}
+        try { layer.style.left = '-9999px'; } catch(e){}
+        try { layer.style.opacity = '0'; } catch(e){}
 
-            e.preventDefault();
-            e.stopPropagation();
-        } else {
-            // 이미 닫혀 있으면 뒤로가기 동작 허용
+        // 원래 버튼으로 포커스 복귀
+        const btn = document.querySelector('.btn_filter');
+        if (btn) {
+            // tabindex 확보 (스크립트로만 포커싱 가능할 경우)
+            if (!btn.hasAttribute('tabindex')) btn.setAttribute('tabindex', '-1');
+            btn.focus();
         }
+
+        e.preventDefault();
+        e.stopPropagation();
     }
 });
