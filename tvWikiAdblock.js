@@ -532,9 +532,74 @@ const mainPageUrl = "tvwiki4.net";
 
 
 
-    window.testFunc = function() {
-    NativeApp.jsLog("함수 테스트");
+
+
+
+  window.handleBackButton = function() {
+
+    // 1. 검색창에서 ESC, 뒤로가기 눌렀을 때 동작
+    const isSearchLayerOpen = document.querySelector('.search_layer.active') !== null;// 검색창이 활성화 상태인지 여부 (true / false)
+
+    if (isSearchLayerOpen){
+      document.querySelector('.search_layer')?.classList.remove('active');
+      document.querySelector('.search_wrap')?.classList.remove('active');
+
+      // 현재 입력창 포커스 제거
+      if (document.activeElement) {
+          document.activeElement.blur();
+      }
+
+      // btn_search 버튼에 포커스 주기
+      const btn = document.querySelector('.btn_search');
+      if (btn) {
+          btn.focus();
+      }
+
+      e.preventDefault();
+      e.stopPropagation();
+      NativeApp.jsLog("검색창 닫고 받환");
+      return;
+    }
+
+
+    // 2. 드롭다운 선택중 뒤로가기 눌렀을 때 동작
+    const layer = document.querySelector('.filter_layer');
+    if (!layer) return;
+    const computed = window.getComputedStyle(layer);
+    const hasActiveClass = layer.classList && layer.classList.contains('active');
+    const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
+    const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
+    const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
+    const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
+
+    if (isOpen) {
+      layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
+      // 원래 버튼으로 포커스 복귀
+      const btn = document.querySelector('.filter_layer');
+      btn.focus();
+      btn.click();
+      e.preventDefault();
+      e.stopPropagation();
+      NativeApp.jsLog("드롭다운 닫고 반환");
+      return;
+    }
+
+
+    //3. 검색창이나 드롭다운 활성화 상태가 아니라면 뒤로가기 실행
+    const host = location.hostname.replace(/^www\./, "");
+    if (host === mainPageUrl ) {
+      // 안드로이드 네이티브 함수 호출
+      if (window.Android && typeof Android.finishApp === "function") {
+        Android.finishApp();
+      } else {
+        history.back();
+      }
+    }
   }
+
+
+
+
 
 
 
@@ -740,87 +805,6 @@ document.addEventListener('keydown', (e) => {
 
 
 
-//뒤로가기, ESC 등 눌렀을때 동작
-document.addEventListener('keydown', (e) => {
 
 
-  // 뒤로/취소 키 감지 (Chromecast/Android/WebView 변종 포함)
-  const isBackKey =
-      e.key === 'Back' ||         // 일부 환경
-      e.key === 'BrowserBack' ||  // 일부 브라우저
-      e.key === 'Escape' ||       // ESC
-      //e.key === 'Backspace' ||    // 때로 Backspace가 쓰이기도 함
-      //e.keyCode === 8 ||          // Backspace
-      e.keyCode === 27;           // ESC
-
-
-  // 뒤로가기 키가 눌렸을때
-  if (isBackKey){
-  // 1. 검색창이 활성화 상태일때
-    const isSearchLayerOpen = document.querySelector('.search_layer.active') !== null;// 검색창이 활성화 상태인지 여부 (true / false)
-    console.log("ESC 감지");
-    NativeApp.jsLog("ESC 감지");
-
-    if (isSearchLayerOpen){
-      document.querySelector('.search_layer')?.classList.remove('active');
-      document.querySelector('.search_wrap')?.classList.remove('active');
-
-      // 현재 입력창 포커스 제거
-      if (document.activeElement) {
-          document.activeElement.blur();
-      }
-
-      // btn_search 버튼에 포커스 주기
-      const btn = document.querySelector('.btn_search');
-      if (btn) {
-          btn.focus();
-      }
-
-      e.preventDefault();
-      e.stopPropagation();
-      console.log("검색창 닫고 반환");
-      NativeApp.jsLog("검색창 닫고 반환");
-      return;
-    }
-
-
-    // 2. 열린 상태 판정: class, inline style, computed style 등 다 검사
-    const layer = document.querySelector('.filter_layer');
-    if (!layer) return;
-    const computed = window.getComputedStyle(layer);
-    const hasActiveClass = layer.classList && layer.classList.contains('active');
-    const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
-    const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
-    const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
-    const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
-
-    if (isOpen) {
-      layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
-      // 원래 버튼으로 포커스 복귀
-      const btn = document.querySelector('.filter_layer');
-      btn.focus();
-      btn.click();
-      e.preventDefault();
-      e.stopPropagation();
-      console.log("드롭다운 닫고 반환");
-      NativeApp.jsLog("드롭다운 닫고 반환");
-      return;
-    }
-
-
-
-    //3. 검색창이나 드롭다운 활성화 상태가 아니라면 뒤로가기 실행
-    const host = location.hostname.replace(/^www\./, "");
-    if (host === mainPageUrl ) {
-      // 안드로이드 네이티브 함수 호출
-      if (window.Android && typeof Android.finishApp === "function") {
-        Android.finishApp();
-      } else {
-        history.back();
-      }
-    }
-  }
-});
-
-
-NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020745");
+NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020755");
