@@ -677,7 +677,7 @@ document.addEventListener('focusout', (e) => {
 });
 
 // 페이지 첫 시작시 검색 버튼 (btn_search 요소)로 포커스
-const btnSearch = document.querySelector('body');
+const btnSearch = document.querySelector('a.btn_search');
 
 if (btnSearch) {
     btnSearch.focus({ preventScroll: false }); // 화면 스크롤 이동 허용
