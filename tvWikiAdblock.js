@@ -613,49 +613,111 @@
 });
 
 
+
+
+
+
+
+
+
+// === focus overlay: .title / .title2 전용 ===
 let focusOverlay = null;
+let focusedTarget = null; // 현재 포커스 대상 ('.title' 또는 '.title2')
 
-document.addEventListener('focusin', (e) => {
-    const el = e.target;
-    const rect = el.getBoundingClientRect();
+function createOverlayFor(target) {
+    // 기존 오버레이 제거
+    removeOverlay();
 
-    // 원본을 투명하게 만들기
-    el.style.opacity = '0';       // 배경, 글자 모두 투명
+    const rect = target.getBoundingClientRect();
+    // 원본 opacity 저장
+    target.dataset._origOpacity = target.style.opacity ?? '';
 
-    // 포커스 오버레이 생성
+    // 원본 숨기기
+    target.style.opacity = '0';
+
+    // 오버레이 생성
     focusOverlay = document.createElement('div');
-    focusOverlay.textContent = el.textContent; // 글자 복사
+    focusOverlay.textContent = target.textContent;
     focusOverlay.style.position = 'absolute';
     focusOverlay.style.top = `${rect.top + window.scrollY}px`;
     focusOverlay.style.left = `${rect.left + window.scrollX}px`;
     focusOverlay.style.width = `${rect.width}px`;
-    focusOverlay.style.height = `${rect.height+20}px`;
-    focusOverlay.style.color = '#000'; // 글자 색
+    focusOverlay.style.height = `${rect.height + 4}px`; // 여유값 조금
+    focusOverlay.style.color = '#000';
     focusOverlay.style.fontWeight = 'bold';
-    focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
+    focusOverlay.style.background = 'rgba(255, 215, 0, 1)';
     focusOverlay.style.display = 'flex';
     focusOverlay.style.alignItems = 'center';
     focusOverlay.style.justifyContent = 'center';
     focusOverlay.style.zIndex = '999999';
     focusOverlay.style.pointerEvents = 'none';
-    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
-    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
-    focusOverlay.style.padding = '4px 10px'; // 자연스럽게 보이도록 얇게 설정
+    // 폰트 스타일 복사 (안전하게 window.getComputedStyle로)
+    const cs = window.getComputedStyle(target);
+    focusOverlay.style.fontSize = cs.fontSize;
+    focusOverlay.style.fontFamily = cs.fontFamily;
+    focusOverlay.style.padding = '4px 10px';
+    focusOverlay.style.boxSizing = 'border-box';
+    focusOverlay.setAttribute('aria-hidden', 'true');
 
     document.body.appendChild(focusOverlay);
-});
 
-document.addEventListener('focusout', (e) => {
-    const el = e.target;
+    // 현재 타겟 저장
+    focusedTarget = target;
 
-    // 원본 복원
-    el.style.opacity = '';
+    // 스크롤/리사이즈시 위치 업데이트 함수 등록
+    window.addEventListener('scroll', updateOverlayPosition, true);
+    window.addEventListener('resize', updateOverlayPosition);
+}
 
-    // 오버레이 제거
+function updateOverlayPosition() {
+    if (!focusOverlay || !focusedTarget) return;
+    const rect = focusedTarget.getBoundingClientRect();
+    focusOverlay.style.top = `${rect.top + window.scrollY}px`;
+    focusOverlay.style.left = `${rect.left + window.scrollX}px`;
+    focusOverlay.style.width = `${rect.width}px`;
+    focusOverlay.style.height = `${rect.height + 4}px`;
+}
+
+function removeOverlay() {
     if (focusOverlay) {
         focusOverlay.remove();
         focusOverlay = null;
     }
+    if (focusedTarget) {
+        // 원본 opacity 복원
+        if (Object.prototype.hasOwnProperty.call(focusedTarget.dataset, '_origOpacity')) {
+            focusedTarget.style.opacity = focusedTarget.dataset._origOpacity;
+            delete focusedTarget.dataset._origOpacity;
+        } else {
+            focusedTarget.style.opacity = '';
+        }
+        focusedTarget = null;
+    }
+    window.removeEventListener('scroll', updateOverlayPosition, true);
+    window.removeEventListener('resize', updateOverlayPosition);
+}
+
+// 포커스 들어올 때: target 또는 조상 중에 .title/.title2가 있으면 처리
+document.addEventListener('focusin', (e) => {
+    // e.target이 자식일 수 있으니 closest 사용
+    const target = e.target.closest && e.target.closest('.title, .title2', '.on');
+    if (!target) return; // 해당 클래스가 아니면 무시
+
+    createOverlayFor(target);
+});
+
+// 포커스 나갈 때: 관련된 .title/.title2 요소라면 제거
+document.addEventListener('focusout', (e) => {
+    // focusout 시 relatedTarget(다음에 포커스되는 요소)이 같은 그룹이면 제거하지 않을 수 있음.
+    // 여기서는 간단하게 현재 overlay가 존재하면 제거.
+    // 안전하게, 포커스가 같은 타겟 내부로 옮겨지는 경우(예: 자식->부모)에는 relatedTarget 검사 가능.
+    const movedTo = e.relatedTarget;
+    // 만약 다음 포커스가 동일한 .title/.title2 내부라면 제거하지 않음
+    if (movedTo && movedTo.closest && focusedTarget && movedTo.closest('.title, .title2', '.on') === focusedTarget) {
+        return;
+    }
+
+    removeOverlay();
 });
 
 
