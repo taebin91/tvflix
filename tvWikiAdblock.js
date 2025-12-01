@@ -798,3 +798,6 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
+
+
+NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020730");
