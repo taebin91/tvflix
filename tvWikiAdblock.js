@@ -823,4 +823,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020734");
+NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020740");
