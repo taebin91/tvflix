@@ -679,7 +679,7 @@ document.addEventListener('focusout', (e) => {
 // 페이지 로드 후 실행
 window.addEventListener('load', () => {
     setTimeout(() => {
-        const firstLink = document.querySelector('a');
+        const firstLink = document.querySelector('img');
         if (firstLink) firstLink.focus();
       console.log("페이지 첫 로드 포커스");
     }, 100); // 100ms 정도 지연
