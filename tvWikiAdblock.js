@@ -169,7 +169,7 @@
         searchLabel.classList.add('search-label');
 
         // 2. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
-        searchLabel.style.setProperty('font-size', '1.7em', 'important'); // <<-- 최종 폰트 크기 강제 적용
+        searchLabel.style.setProperty('font-size', '24px', 'important'); // <<-- 최종 폰트 크기 강제 적용
 
         // 3. 버튼 아이콘 앞에 텍스트 추가
         searchButton.prepend(searchLabel);
@@ -400,11 +400,6 @@
 
             transition: outline-color 0.2s, box-shadow 0.2s;
         }
-
-
-
-
-
 
         /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
         iframe:focus {
