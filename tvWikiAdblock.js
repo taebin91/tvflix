@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020835";
+const scriptVersion = "2512020841";
 
 
 (function() {
@@ -546,19 +546,19 @@ const scriptVersion = "2512020835";
 
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
+    const path = window.location.pathname.replace(/\/$/, ""); // 끝의 / 제거
 
-    NativeApp.jsLog(host);
-    NativeApp.jsLog(mainPageUrl);
+    // 메인 페이지는 path가 빈 문자열 또는 '/'로 간주
+    const isMainPage = host === mainPageUrl && (path === "" || path === "/");
 
-    if (host === mainPageUrl ) {
-      NativeApp.finishApp();
-    }
-    else {
-      history.back();
+    NativeApp.jsLog(`host: ${host}, path: ${path}, isMainPage: ${isMainPage}`);
+
+    if (isMainPage) {
+        NativeApp.finishApp();
+    } else {
+        history.back();
     }
   }
-
-
 
 
 
