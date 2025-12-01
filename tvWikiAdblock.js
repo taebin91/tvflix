@@ -750,7 +750,7 @@ document.addEventListener('keydown', (e) => {
       e.preventDefault();
       e.stopPropagation();
       console.log("검색창 닫고 반환");
-      NativeApp.jsLog("검색창 닫고 반환);
+      NativeApp.jsLog("검색창 닫고 반환");
       return;
     }
 
@@ -774,7 +774,7 @@ document.addEventListener('keydown', (e) => {
       e.preventDefault();
       e.stopPropagation();
       console.log("드롭다운 닫고 반환");
-      NativeApp.jsLog("드롭다운 받고 반환);
+      NativeApp.jsLog("드롭다운 닫고 반환");
       return;
     }
 
@@ -785,7 +785,7 @@ document.addEventListener('keydown', (e) => {
     if (host === mainPageUrl ) {
       // 안드로이드 네이티브 함수 호출
       if (window.Android && typeof Android.finishApp === "function") {
-        NativeApp.finishApp();
+        Android.finishApp();
       } else {
         history.back();
       }
