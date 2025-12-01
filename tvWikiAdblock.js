@@ -36,7 +36,7 @@
     });
 
     // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
-    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on').forEach(element => {
+    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on', 'body').forEach(element => {
         element.setAttribute('tabindex', '-1');
     });
 
