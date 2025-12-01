@@ -613,159 +613,50 @@
 });
 
 
-// 한 번만 생성해서 재사용하는 안전한 포커스 오버레이
-(function() {
-  if (window.__tvflix_focus_overlay_installed) return;
-  window.__tvflix_focus_overlay_installed = true;
+let focusOverlay = null;
 
-  // 스타일 (애니메이션 포함) — 한번만 주입
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes tvflicker {
-      0% { background-color: rgba(255,215,0,1); }
-      100% { background-color: rgba(255,215,0,0.6); }
+document.addEventListener('focusin', (e) => {
+    const el = e.target;
+    const rect = el.getBoundingClientRect();
+
+    // 원본을 투명하게 만들기
+    el.style.opacity = '0';       // 배경, 글자 모두 투명
+
+    // 포커스 오버레이 생성
+    focusOverlay = document.createElement('div');
+    focusOverlay.textContent = el.textContent; // 글자 복사
+    focusOverlay.style.position = 'absolute';
+    focusOverlay.style.top = `${rect.top + window.scrollY}px`;
+    focusOverlay.style.left = `${rect.left + window.scrollX}px`;
+    focusOverlay.style.width = `${rect.width}px`;
+    focusOverlay.style.height = `${rect.height+20}px`;
+    focusOverlay.style.color = '#000'; // 글자 색
+    focusOverlay.style.fontWeight = 'bold';
+    focusOverlay.style.background = 'rgba(255, 215, 0, 1)'; // 포커스 배경
+    focusOverlay.style.display = 'flex';
+    focusOverlay.style.alignItems = 'center';
+    focusOverlay.style.justifyContent = 'center';
+    focusOverlay.style.zIndex = '999999';
+    focusOverlay.style.pointerEvents = 'none';
+    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
+    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
+    focusOverlay.style.padding = '4px 10px'; // 자연스럽게 보이도록 얇게 설정
+
+    document.body.appendChild(focusOverlay);
+});
+
+document.addEventListener('focusout', (e) => {
+    const el = e.target;
+
+    // 원본 복원
+    el.style.opacity = '';
+
+    // 오버레이 제거
+    if (focusOverlay) {
+        focusOverlay.remove();
+        focusOverlay = null;
     }
-    #tvflix-focus-overlay {
-      position: absolute;
-      display: none;
-      box-sizing: border-box;
-      pointer-events: none;
-      z-index: 2147483646; /* 거의 최상위, 그래도 시스템 UI보다 작음 */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      border-radius: 2px;
-      will-change: transform, width, height, left, top, background;
-    }
-    /* 내부 텍스트 스타일용(유연하게 override 가능) */
-    #tvflix-focus-overlay .tvflix-text {
-      display: inline-block;
-      padding: 4px 10px;
-      line-height: 1;
-      font-weight: 700;
-      color: #000;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // 오버레이 엘리먼트(한 번만)
-  const overlay = document.createElement('div');
-  overlay.id = 'tvflix-focus-overlay';
-  overlay.setAttribute('aria-hidden', 'true');
-  const inner = document.createElement('span');
-  inner.className = 'tvflix-text';
-  overlay.appendChild(inner);
-  document.body.appendChild(overlay);
-
-  // 원본의 기존 inline 스타일을 저장할 WeakMap (안전 복원용)
-  const savedStyles = new WeakMap();
-  let activeTarget = null;
-
-  function saveOriginalStyle(el) {
-    if (!savedStyles.has(el)) {
-      savedStyles.set(el, {
-        opacity: el.style.opacity || '',
-        color: el.style.color || '',
-        // 필요하면 추가 속성 저장
-      });
-    }
-  }
-  function restoreOriginalStyle(el) {
-    const s = savedStyles.get(el);
-    if (!s) return;
-    if ('opacity' in s) el.style.opacity = s.opacity;
-    if ('color' in s) el.style.color = s.color;
-    savedStyles.delete(el);
-  }
-
-  function showOverlayFor(el) {
-    if (!el || el === document.documentElement || el === document.body) return;
-    activeTarget = el;
-
-    // 측정은 rAF 내부에서 안전하게
-    requestAnimationFrame(() => {
-      const rect = el.getBoundingClientRect();
-      if (rect.width === 0 && rect.height === 0) {
-        // 숨김 상태거나 보이지 않으면 표시하지 않음
-        return;
-      }
-
-      // 텍스트: 가능한 경우 innerText (간단) 사용 — 필요 시 더 정교하게 innerHTML 복사 가능
-      const text = (el.textContent || '').trim();
-      inner.textContent = text;
-
-      // 원본 스타일 숨기기(투명화) — 값 저장 후 적용
-      saveOriginalStyle(el);
-      el.style.opacity = '0';
-
-      // 위치/크기 설정 (scroll 보정)
-      const top = rect.top + window.scrollY;
-      const left = rect.left + window.scrollX;
-      const width = Math.max(0, rect.width);
-      const height = Math.max(0, rect.height);
-
-      overlay.style.top = `${top}px`;
-      overlay.style.left = `${left}px`;
-      // width는 텍스트 여백 고려해서 약간 줄 수 있음
-      overlay.style.width = `${width}px`;
-      overlay.style.height = `${height}px`;
-
-      // 텍스트 폰트 조정(원본 폰트 크기/패밀리 복사)
-      const cs = window.getComputedStyle(el);
-      inner.style.fontSize = cs.fontSize;
-      inner.style.fontFamily = cs.fontFamily;
-      inner.style.lineHeight = cs.lineHeight;
-
-      // 애니메이션(반짝임)
-      overlay.style.display = 'block';
-      overlay.style.animation = 'tvflicker 0.9s infinite alternate';
-
-      // 배경/글자색은 inner에 적용하는 편이 안전
-      inner.style.background = 'rgba(255,215,0,1)';
-      inner.style.color = '#000';
-    });
-  }
-
-  function hideOverlay() {
-    if (activeTarget) {
-      restoreOriginalStyle(activeTarget);
-      activeTarget = null;
-    }
-    overlay.style.display = 'none';
-    overlay.style.animation = '';
-  }
-
-  // focusin/focusout 이벤트 처리
-  document.addEventListener('focusin', (ev) => {
-    const el = ev.target;
-    // 필터: 포커스 가능한 원소만 (원하면 더 좁게)
-    // 예: if (!(el instanceof HTMLElement)) return;
-    showOverlayFor(el);
-  }, true);
-
-  document.addEventListener('focusout', (ev) => {
-    // 짧은 지연을 주어 같은 프레임 내 다른 포커스 이동이 있으면 덮어쓰도록 처리
-    setTimeout(() => {
-      // 만약 포커스가 문서 내 다른 요소로 이동했다면 그 쪽 focusin 핸들러에서 처리됨
-      // 여기서는 단순히 현재 activeTarget을 복원/제거
-      if (!document.activeElement || document.activeElement === document.body || document.activeElement === document.documentElement) {
-        hideOverlay();
-      }
-    }, 10);
-  }, true);
-
-  // 화면이 리사이즈/스크롤되면 오버레이 위치 갱신 (활성 타겟이 있을 때만)
-  window.addEventListener('resize', () => {
-    if (activeTarget) showOverlayFor(activeTarget);
-  });
-  window.addEventListener('scroll', () => {
-    if (activeTarget) showOverlayFor(activeTarget);
-  }, { passive: true });
-
-})();
-
+});
 
 
 
