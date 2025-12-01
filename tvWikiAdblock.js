@@ -626,10 +626,10 @@ document.addEventListener('focusin', (e) => {
     focusOverlay = document.createElement('div');
     focusOverlay.textContent = el.textContent; // 글자 복사
     focusOverlay.style.position = 'absolute';
-    focusOverlay.style.top = `${rect.top + window.scrollY+4}px`;
-    focusOverlay.style.left = `${rect.left + window.scrollX+4}px`;
-    focusOverlay.style.width = `${rect.width+4}px`;
-    focusOverlay.style.height = `${rect.height+4}px`;
+    focusOverlay.style.top = `${rect.top + window.scrollY}px`;
+    focusOverlay.style.left = `${rect.left + window.scrollX - 10}px`;
+    focusOverlay.style.width = `${rect.width+20}px`;
+    focusOverlay.style.height = `${rect.height+20}px`;
 
     focusOverlay.style.color = '#000'; // 글자 색
     focusOverlay.style.fontWeight = 'bold';
