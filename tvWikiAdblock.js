@@ -710,6 +710,12 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+function testFunc() {
+
+  NativeApp.jsLog("함수 테스트");
+}
+
+
 
 //뒤로가기, ESC 등 눌렀을때 동작
 document.addEventListener('keydown', (e) => {
