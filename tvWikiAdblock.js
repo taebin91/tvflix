@@ -675,7 +675,7 @@ function updateOverlayPosition() {
     focusOverlay.style.top = `${rect.top + window.scrollY}px`;
     focusOverlay.style.left = `${rect.left + window.scrollX}px`;
     focusOverlay.style.width = `${rect.width}px`;
-    focusOverlay.style.height = `${rect.height + 4}px`;
+    focusOverlay.style.height = `${rect.height + 40}px`;
 }
 
 function removeOverlay() {
