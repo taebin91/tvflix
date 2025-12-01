@@ -1,59 +1,771 @@
-let focusOverlay = null;
+// ==UserScript==
+// @name        tvFlixOtt
+// @namespace   https://xlqldnlzl.site
+// @version     20251121
+// @description tvFlixOtt - 메인 페이지 UI 정리 및 포커스 개선
+// @author      Unknown
 
-// 반짝임 효과 스타일 추가
-const blinkStyle = document.createElement('style');
-blinkStyle.textContent = `
-@keyframes focusBlink {
-    0% { background-color: rgba(255, 215, 0, 1); }
-    100% { background-color: rgba(255, 215, 0, 0.6); }
-}
-`;
-document.head.appendChild(blinkStyle);
+// @include     /^https?:\/\/[^/]*tvwiki[^/]*\/.*$/
+// @icon        https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg
+// @grant       none
+// ==/UserScript==
 
-document.addEventListener('focusin', (e) => {
-    const el = e.target;
-    const rect = el.getBoundingClientRect();
 
-    // 원본을 투명하게 만들기
-    el.style.opacity = '0';
 
-    // 포커스 오버레이 생성
-    focusOverlay = document.createElement('div');
-    focusOverlay.textContent = el.textContent;
 
-    focusOverlay.style.position = 'absolute';
-    focusOverlay.style.top = `${rect.top + window.scrollY}px`;
-    focusOverlay.style.left = `${rect.left + window.scrollX}px`;
-    focusOverlay.style.width = `${rect.width}px`;
-    focusOverlay.style.height = `${rect.height + 20}px`;
+(function() {
+    'use strict';
 
-    focusOverlay.style.color = '#000';
-    focusOverlay.style.fontWeight = 'bold';
-    focusOverlay.style.fontSize = window.getComputedStyle(el).fontSize;
-    focusOverlay.style.fontFamily = window.getComputedStyle(el).fontFamily;
 
-    focusOverlay.style.background = 'rgba(255, 215, 0, 1)';
-    focusOverlay.style.display = 'flex';
-    focusOverlay.style.alignItems = 'center';
-    focusOverlay.style.justifyContent = 'center';
 
-    focusOverlay.style.padding = '4px 10px';
-    focusOverlay.style.zIndex = '999999';
-    focusOverlay.style.pointerEvents = 'none';
+  // 1. 포커스 비활성화 로직
+  // 2. UI 요소 제거 로직
+  // 3. UI 요소 추가 로직
+  // 4. UI 요소 변경 로직
+  // 5. 기타
 
-    // ✨ 반짝임 애니메이션 적용
-    focusOverlay.style.animation = 'focusBlink 0.8s infinite alternate';
 
-    document.body.appendChild(focusOverlay);
-});
+    // =======================================================
+    // 1. 포커스 비활성화
+    // =======================================================
+    // .slide_wrap 내부의 '.title'을 제외한 모든 요소의 포커스 비활성화
+    document.querySelectorAll('.slide_wrap *').forEach(element => {
+    if (element.classList && !element.classList.contains('title') && !element.classList.contains('more')) {
+      element.setAttribute('tabindex', '-1');
+        }
+    });
 
-document.addEventListener('focusout', (e) => {
-    const el = e.target;
+    // 기존의 기타 포커스 비활성화 로직 (안전을 위해 유지)
+    document.querySelectorAll('a.img, img, img.lazy, iframe', 'a.on', 'body').forEach(element => {
+        element.setAttribute('tabindex', '-1');
+    });
 
-    el.style.opacity = '';
+	  const formElement = document.getElementById('fboardlist');
+		if (formElement) {
+			formElement.setAttribute('tabindex', '-1');
+		}
 
-    if (focusOverlay) {
-        focusOverlay.remove();
-        focusOverlay = null;
+	  const searchElement= document.getElementById('sch_submit');
+		if (searchElement) {
+			searchElement.setAttribute('tabindex', '-1');
+		}
+    // =======================================================
+
+
+
+
+
+
+    // =======================================================
+    // 2. UI 요소 제거
+    // =======================================================
+    const elementsToRemove = [
+        '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
+        '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
+        '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
+        'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
+        'nav.gnb.sf-js-enabled.sf-arrows', 'a.btn_login', '#bnb', '#footer', '.search_wrap ul', '.layer-footer', '.genre', '#other_list ul li p'
+    ];
+
+    elementsToRemove.forEach(selector => {
+        document.querySelectorAll(selector).forEach(element => {
+            element.remove();
+        });
+    });
+    // 메인 페이지('/')가 아닌 하위 페이지일 경우 #header_wrap (로고, 검색버튼)을 삭제
+    const pathname = window.location.pathname;
+    // '/'로 분리 후 빈 문자열 제거
+    const pathSegments = pathname.split('/').filter(seg => seg !== '');
+    // pathSegments 길이로 깊이 판단
+    // pathSegments.length > 1이면 서브서브 페이지
+    if (pathSegments.length > 1) {
+        const headerWrap = document.getElementById('header_wrap');
+        if (headerWrap) {
+            headerWrap.remove();
+            console.log('Conditional: Removed #header_wrap because this is a sub-sub page.');
+        }
+    } else {
+        // 메인 페이지 또는 서브페이지일 때 실행
+        const headerWrap = document.getElementById('header_wrap');
+        if (headerWrap) {
+            headerWrap.style.height = '100px';
+        }
+
+        // 검색 버튼 수직 중앙 정렬
+        const headerElement = document.getElementById('header');
+        if (headerElement && headerElement.parentElement) {
+            const parent = headerElement.parentElement;
+            parent.style.display = 'flex';
+            parent.style.alignItems = 'center';
+            console.log('Flexbox를 이용해 #header를 수직 중앙 정렬했습니다.');
+        }
     }
+
+    // '.bo_v_tit' 요소에서 '다시보기' 텍스트 제거
+    document.querySelectorAll('.bo_v_tit').forEach(element => {
+        // 정규 표현식을 사용하여 모든 '다시보기' 문자열을 빈 문자열로 대체하고 앞뒤 공백 제거
+        if (element.textContent.includes('다시보기')) {
+            element.textContent = element.textContent.replace(/다시보기/g, '').trim();
+            console.log('Removed "다시보기" text from .bo_v_tit.');
+        }
+    });
+
+    // 홈화면의 첫 번째 '.slide_wrap' 제거
+    const firstSlideWrap = document.querySelector('.slide_wrap');
+    if (firstSlideWrap) {
+        firstSlideWrap.remove();
+        console.log('Removed the first .slide_wrap element.');
+    }
+    // 남은 Slide Wrap 제목 변경 로직
+    const slideWraps = document.querySelectorAll('.slide_wrap');
+    const newTitles = ['드라마', '영화', '예능', '애니메이션'];
+    slideWraps.forEach((wrap, index) => {
+        if (index < newTitles.length) {
+            const h2 = wrap.querySelector('h2');
+            if (h2) {
+                const moreLink = h2.querySelector('a.more');
+                const newTitleText = newTitles[index];
+
+                if (moreLink) {
+                    h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
+                    console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
+                } else {
+                    h2.textContent = newTitleText;
+                    console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
+                }
+            }
+        }
+    });
+
+    //재생 페이지에서 다른 회차 썸네일 제거
+    // class가 searchText로 시작하는 모든 li 선택
+    const liElements = document.querySelectorAll('li[class^="searchText"]');
+    liElements.forEach(li => {
+        const img = li.querySelector('img');
+        if (img) {
+            img.remove();
+            console.log('이미지 제거 완료:', img);
+        }
+    });
+    // =======================================================
+
+
+
+
+
+
+
+
+    // =======================================================
+    // 3. UI 요소 추가
+    // =======================================================
+    // 검색 버튼 텍스트 추가 로직 및 인라인 스타일 강제 오버라이드
+    const searchButton = document.querySelector('a.btn_search');
+    if (searchButton) {
+
+        // 1. 텍스트를 담을 span 요소를 생성
+        const searchLabel = document.createElement('span');
+        searchLabel.textContent = ' 검색 ';
+        searchLabel.classList.add('search-label');
+
+        // 2. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
+        searchLabel.style.setProperty('font-size', '24px', 'important'); // <<-- 최종 폰트 크기 강제 적용
+
+        // 3. 버튼 아이콘 앞에 텍스트 추가
+        searchButton.prepend(searchLabel);
+        console.log('Added "검색하기" text to the search button with inline style overwrite.');
+    }
+
+    // 재생 페이지'.bo_v_mov'에 '동영상 재생하기' 버튼 추가 및 스타일 적용
+    document.querySelectorAll('div.bo_v_mov').forEach(container => {
+        // "동영상 재생하기" 버튼 생성
+        const playButton = document.createElement('button');
+        playButton.textContent = '▶️ 재생';
+        playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
+
+        // 버튼 스타일 강제 적용 (Netflix 스타일) - 폰트 크기 증가 및 가로 길이 축소 반영
+        playButton.style.cssText = `
+            background-color: #e50914 !important;
+            color: white !important;
+            padding: 10px 15px !important; /* 패딩 조정 */
+            border: none !important;
+            border-radius: 4px !important;
+            font-size: 24px !important; /* 폰트 크기 증가 */
+            cursor: pointer !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+            transition: background-color 0.2s !important;
+            width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
+            height: 60px !important;
+        `;
+
+        // 포커스/호버 효과 추가
+        playButton.onmouseover = playButton.onfocus = function() {
+            this.style.backgroundColor = '#f40612'; // 더 밝은 빨강
+        };
+        playButton.onmouseout = playButton.onblur = function() {
+            this.style.backgroundColor = '#e50914'; // 원래 빨강
+        };
+
+
+        // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
+        playButton.onclick = function(e) {
+            e.preventDefault();
+            console.log('동영상 재생하기 버튼 클릭됨.');
+
+            // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
+            // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
+            if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
+                NativeApp.handlePlayButtonClick();
+                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
+            } else {
+                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
+            }
+        };
+        // 컨테이너에 버튼 추가
+        container.appendChild(playButton);
+        console.log('Added "동영상 재생하기" button to .bo_v_mov.');
+    });
+    // =======================================================
+
+
+
+
+
+
+
+    // =======================================================
+    // 4. UI 요소 변경
+    // =======================================================
+    // D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
+
+        /* 🚨 [위치 최종 수정] 커스텀 알림 모달 스타일: 뷰포트 고정(Fixed) 및 중앙 정렬 */
+        .custom-alert-backdrop {
+            position: fixed !important; /* 뷰포트에 고정되어 스크롤 시 따라옴 */
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            z-index: 10000 !important; /* Z-index를 높게 설정 */
+            display: block !important;
+            /* 렌더링 최적화를 위한 힌트 추가 (종종 Fixed 버그 해결에 도움) */
+            will-change: transform, opacity;
+        }
+        .custom-alert-modal {
+            /* 모달 자체를 중앙에 위치시킵니다. */
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 10001 !important; /* 배경보다 한 단계 더 높게 */
+
+            background: #2c2c2c; /* 다크 모드 배경 */
+            color: #f0f0f0; /* 밝은 텍스트 */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 2px solid #FFD700; /* 포커스 색상 */
+        }
+        .custom-alert-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+        .custom-alert-message {
+            margin-bottom: 20px;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .custom-alert-actions button {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+        .custom-alert-actions button:focus,
+        .custom-alert-actions button:hover {
+            background-color: #FFD700;
+            color: #111;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+
+
+
+
+        /* 🚨 [새로운 수정] "전체보기" 링크를 오른쪽에서 띄우기 위한 스타일 */
+        /* 이 링크는 h2 내부에 있으므로, 오른쪽 끝에서 20px의 여백을 줍니다. */
+        .more {
+            padding-right: 20px !important;
+        }
+
+        /* =========================================================== */
+        /* [FIX 2] Title Link Font Size and Vertical Alignment */
+        /* 높은 명시도로 폰트 크기 및 수직 정렬을 강제 적용합니다. */
+        .owl-carousel .owl-item .title,
+        .owl-carousel .owl-item .box a.title, a.more /* 명시도 확보를 위한 추가 셀렉터 */
+        a.title {
+            /* 1. 높이 유지 (50px) 및 수직 중앙 정렬을 위해 line-height를 높이와 동일하게 설정 */
+            height: 50px !important;
+            line-height: 50px !important;
+
+            /* 2. 폰트 크기 키우기 (명시도 + 크기 강제) */
+            font-size: 1.4em !important;
+        }
+
+        a.more {
+            font-size: 0.9em !important;
+        }
+
+        h2 {
+            font-size: 1.7em !important;
+        }
+        /* =========================================================== */
+
+        /* (기존 포커스 및 UI 스타일 유지) */
+
+        /* =========================================================== */
+        /* [FIX] Owl Carousel: Restore Sliding, Keep Aspect Ratio (2:3 assumed) */
+
+
+        /* 2. Owl Stage의 transform 및 width 초기화 제거 */
+        /* -> Owl Carousel JS가 슬라이딩을 위해 설정하는 transform을 복구합니다. */
+
+
+        /* 3. 이미지 컨테이너 (.img)에 비율 유지 핵 적용 (썸네일 비율 2:3 가정) */
+        /* * 비율 유지를 위해 .img 요소에 padding-top: 150%만 적용 */
+        .owl-carousel .owl-item .box > a.img {
+            /* position: relative 필수: 자식 img가 absolute로 배치될 기준점 */
+            position: relative !important;
+            width: 100% !important;
+            height: 0 !important; /* 높이는 padding-top으로 대체 */
+
+            /* Aspect Ratio Hack: 가로 2 : 세로 3 (150%) 비율 유지 */
+            padding-top: 150% !important;
+            overflow: hidden !important;
+            display: block !important;
+        }
+
+        /* 4. 비율 유지 컨테이너 내부의 이미지 크기 강제 */
+        .owl-carousel .owl-item .box > a.img > img {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important; /* 이미지 잘림 없이 컨테이너에 맞춤 */
+        }
+
+
+
+        /* 5. 제목(.title) 높이도 줄어든 크기에 맞게 조정 */
+        /* (이 부분은 비율과 관계 없지만 전체 세로 길이 축소를 위해 유지) */
+        .owl-carousel .owl-item .title {
+            height: 35px !important;
+            line-height: 1.2 !important;
+            font-size: 14px !important;
+        }
+        a.title2{
+                    height: 35px !important;
+            line-height: 1.2 !important;
+            font-size: 19px !important;
+        }
+        /* =========================================================== */
+
+
+
+
+        /* 모든 포커스 가능한 요소의 테두리 스타일을 재정의 */
+        :focus {
+
+            z-index: 9999 !important;
+            background-color: #FFD700 !important; /* 노란색 배경 */
+            outline: 4px solid #FFD700 !important;
+            outline-offset: 0px !important;
+
+            box-shadow:
+                0 0 0 400px #FFD700 inset,
+                0 0 400px rgba(255, 215, 0, 1) !important;
+
+            transition: outline-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
+        iframe:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            position: static !important;
+            z-index: auto !important;
+        }
+
+
+        /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
+        #header_wrap #header #tnb ul li {
+            float: none !important;
+            display: inline-block !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: unset !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* [NEW FEATURE] .bo_v_mov 크기를 버튼에 맞게 강제 축소 및 중앙 정렬 */
+        .bo_v_mov {
+            width: 100% !important;
+            height: 80px !important; /* 버튼이 들어갈 높이로 강제 축소 */
+            display: flex !important;
+            justify-content: center !important; /* 중앙 정렬 */
+            align-items: center !important; /* 중앙 정렬 */
+            background-color: #1a1a1a !important; /* 배경색을 어둡게 설정 */
+            border-radius: 8px !important;
+            margin: 10px 0 !important;
+            padding: 0 !important;
+        }
+
+
+        /* [MAX SPECIFICITY FIX] ID 선택자를 모두 포함하여 명시도를 최상으로 높임 */
+        #header_wrap #header #tnb ul li a.btn_search {
+            /* Flexbox로 가로 정렬 강제 */
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important; /* 줄바꿈 절대 금지 */
+            align-items: center !important; /* 수직 중앙 정렬 */
+
+            /* 너비/높이 고정값 무효화 및 내용물에 맞게 확장 */
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important; /* 최소 너비 제한 해제 */
+
+            justify-content: flex-start !important;
+            padding: 8px 15px !important;
+            line-height: normal !important; /* 폰트 관련 문제 해결 */
+            box-sizing: content-box !important; /* 패딩이 너비에 영향을 주지 않도록 함 */
+        }
+
+        /* 텍스트와 아이콘도 명시도를 높여서 가로 배치에 협조하도록 강제 */
+        #header_wrap #header #tnb ul li a.btn_search span.search-label,
+        #header_wrap #header #tnb ul li a.btn_search i {
+            display: inline-block !important; /* Flex 아이템으로 잘 동작하도록 설정 */
+            margin: 0 !important; /* 외부 마진 초기화 */
+            padding: 0 !important; /* 외부 패딩 초기화 */
+            white-space: nowrap !important;
+            flex-shrink: 0 !important; /* 공간이 부족해도 축소되지 않도록 함 */
+            line-height: 1 !important;
+        }
+
+        /* 텍스트와 아이콘 사이의 간격 재설정 */
+        #header_wrap #header #tnb ul li a.btn_search span.search-label {
+            margin-right: 8px !important;
+            font-weight: bold;
+            color: inherit;
+            /* CSS도 충분히 높여서 혹시 모를 경우 대비 (JS에서 최종 오버라이드 됨) */
+            font-size: 1.7em !important;
+        }
+    `;
+    document.head.appendChild(style);
+    console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
+
+
+    // =======================================================
+    // 5. 기타
+    // =======================================================
+    // 타이틀 변경
+    document.title = "Netflix";
+    const logoLink = document.querySelector("a.logo");
+    if (logoLink) {
+        const img = logoLink.querySelector("img");
+        if (img) {
+            img.src = "https://i.imgur.com/rBAwaXX.png";
+            img.style.width = "110px";
+            img.style.height = "auto";
+        }
+    }
+    // 아이콘 변경 함수 호출
+    const faviconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
+    const appleIconURL = "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg";
+
+    function replaceIcons() {
+        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
+        const icon = document.createElement('link');
+        icon.rel = "icon";
+        icon.type = "image/svg+xml";
+        icon.href = faviconURL;
+        document.head.appendChild(icon);
+        const apple = document.createElement('link');
+        apple.rel = "apple-touch-icon";
+        apple.href = appleIconURL;
+        document.head.appendChild(apple);
+    }
+    replaceIcons();
+
+    // 자동 플레이어 넘기기 시도 (버튼 클릭)
+    const button = document.querySelector('a.btn.btn_normal');
+    if (button) {
+        button.click();
+    }
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // =======================================================
+    // 2. 알림창 제목 재정의 로직: 모든 웹사이트 알림을 '알림'으로 통일
+    // =======================================================
+
+    // 커스텀 알림 모달을 표시하는 함수
+    function showCustomAlert(message, isConfirm = false) {
+        // 이미 모달이 떠 있다면 새 모달을 띄우지 않음 (중첩 방지)
+        if (document.querySelector('.custom-alert-backdrop')) {
+            console.warn('Attempted to show multiple alerts. Skipping new alert.');
+
+
+			if (typeof NativeApp !== 'undefined' && NativeApp.showNeutralAlert) {
+                NativeApp.showNeutralAlert(String(message));
+                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
+            } else {
+                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
+            }
+
+
+
+
+            return isConfirm ? false : undefined;
+        }
+    }
+
+    // 네이티브 window.alert 덮어쓰기
+    window.alert = function(message) {
+        showCustomAlert(String(message));
+    };
+
+    // 네이티브 window.confirm 덮어쓰기 (await을 통해 결과를 동기적으로 반환)
+    window.confirm = async function(message) {
+        return await showCustomAlert(String(message), true);
+    };
+
+    // window.prompt는 복잡한 사용자 입력이 필요하므로 지원하지 않고 경고 처리 후 null 반환
+    window.prompt = function(message) {
+        console.warn('window.prompt was called. Returning null as it is not supported by custom alerts. Message:', message);
+        return null;
+    };
+
+    console.log('Native alert/confirm functions have been overridden with a custom modal titled "알림".');
+
+
+
+    document.querySelector('.btn_search').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const input = document.getElementById('sch_stx');
+
+        // 입력창 표시 (숨겨져 있다면)
+        input.style.display = 'block';
+
+        // 짧은 딜레이 후 포커스
+        setTimeout(() => {
+            input.focus();
+            input.click();  // 모바일에서 키보드 강제 호출에 필요함
+        }, 50);
+    });
+
+
+
+    document.forms["fsearchbox"].addEventListener("submit", function (e) {
+        const input = document.getElementById("sch_stx");
+
+        if (!input.value.trim()) {
+            e.preventDefault();  // action 실행 막기
+            input.focus();       // 포커스 다시 주기 (선택)
+        }
 });
+
+
+// 한 번만 생성해서 재사용하는 안전한 포커스 오버레이
+(function() {
+  if (window.__tvflix_focus_overlay_installed) return;
+  window.__tvflix_focus_overlay_installed = true;
+
+  // 스타일 (애니메이션 포함) — 한번만 주입
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes tvflicker {
+      0% { background-color: rgba(255,215,0,1); }
+      100% { background-color: rgba(255,215,0,0.6); }
+    }
+    #tvflix-focus-overlay {
+      position: absolute;
+      display: none;
+      box-sizing: border-box;
+      pointer-events: none;
+      z-index: 2147483646; /* 거의 최상위, 그래도 시스템 UI보다 작음 */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      border-radius: 2px;
+      will-change: transform, width, height, left, top, background;
+    }
+    /* 내부 텍스트 스타일용(유연하게 override 가능) */
+    #tvflix-focus-overlay .tvflix-text {
+      display: inline-block;
+      padding: 4px 10px;
+      line-height: 1;
+      font-weight: 700;
+      color: #000;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 오버레이 엘리먼트(한 번만)
+  const overlay = document.createElement('div');
+  overlay.id = 'tvflix-focus-overlay';
+  overlay.setAttribute('aria-hidden', 'true');
+  const inner = document.createElement('span');
+  inner.className = 'tvflix-text';
+  overlay.appendChild(inner);
+  document.body.appendChild(overlay);
+
+  // 원본의 기존 inline 스타일을 저장할 WeakMap (안전 복원용)
+  const savedStyles = new WeakMap();
+  let activeTarget = null;
+
+  function saveOriginalStyle(el) {
+    if (!savedStyles.has(el)) {
+      savedStyles.set(el, {
+        opacity: el.style.opacity || '',
+        color: el.style.color || '',
+        // 필요하면 추가 속성 저장
+      });
+    }
+  }
+  function restoreOriginalStyle(el) {
+    const s = savedStyles.get(el);
+    if (!s) return;
+    if ('opacity' in s) el.style.opacity = s.opacity;
+    if ('color' in s) el.style.color = s.color;
+    savedStyles.delete(el);
+  }
+
+  function showOverlayFor(el) {
+    if (!el || el === document.documentElement || el === document.body) return;
+    activeTarget = el;
+
+    // 측정은 rAF 내부에서 안전하게
+    requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) {
+        // 숨김 상태거나 보이지 않으면 표시하지 않음
+        return;
+      }
+
+      // 텍스트: 가능한 경우 innerText (간단) 사용 — 필요 시 더 정교하게 innerHTML 복사 가능
+      const text = (el.textContent || '').trim();
+      inner.textContent = text;
+
+      // 원본 스타일 숨기기(투명화) — 값 저장 후 적용
+      saveOriginalStyle(el);
+      el.style.opacity = '0';
+
+      // 위치/크기 설정 (scroll 보정)
+      const top = rect.top + window.scrollY;
+      const left = rect.left + window.scrollX;
+      const width = Math.max(0, rect.width);
+      const height = Math.max(0, rect.height);
+
+      overlay.style.top = `${top}px`;
+      overlay.style.left = `${left}px`;
+      // width는 텍스트 여백 고려해서 약간 줄 수 있음
+      overlay.style.width = `${width}px`;
+      overlay.style.height = `${height}px`;
+
+      // 텍스트 폰트 조정(원본 폰트 크기/패밀리 복사)
+      const cs = window.getComputedStyle(el);
+      inner.style.fontSize = cs.fontSize;
+      inner.style.fontFamily = cs.fontFamily;
+      inner.style.lineHeight = cs.lineHeight;
+
+      // 애니메이션(반짝임)
+      overlay.style.display = 'block';
+      overlay.style.animation = 'tvflicker 0.9s infinite alternate';
+
+      // 배경/글자색은 inner에 적용하는 편이 안전
+      inner.style.background = 'rgba(255,215,0,1)';
+      inner.style.color = '#000';
+    });
+  }
+
+  function hideOverlay() {
+    if (activeTarget) {
+      restoreOriginalStyle(activeTarget);
+      activeTarget = null;
+    }
+    overlay.style.display = 'none';
+    overlay.style.animation = '';
+  }
+
+  // focusin/focusout 이벤트 처리
+  document.addEventListener('focusin', (ev) => {
+    const el = ev.target;
+    // 필터: 포커스 가능한 원소만 (원하면 더 좁게)
+    // 예: if (!(el instanceof HTMLElement)) return;
+    showOverlayFor(el);
+  }, true);
+
+  document.addEventListener('focusout', (ev) => {
+    // 짧은 지연을 주어 같은 프레임 내 다른 포커스 이동이 있으면 덮어쓰도록 처리
+    setTimeout(() => {
+      // 만약 포커스가 문서 내 다른 요소로 이동했다면 그 쪽 focusin 핸들러에서 처리됨
+      // 여기서는 단순히 현재 activeTarget을 복원/제거
+      if (!document.activeElement || document.activeElement === document.body || document.activeElement === document.documentElement) {
+        hideOverlay();
+      }
+    }, 10);
+  }, true);
+
+  // 화면이 리사이즈/스크롤되면 오버레이 위치 갱신 (활성 타겟이 있을 때만)
+  window.addEventListener('resize', () => {
+    if (activeTarget) showOverlayFor(activeTarget);
+  });
+  window.addEventListener('scroll', () => {
+    if (activeTarget) showOverlayFor(activeTarget);
+  }, { passive: true });
+
+})();
+
+
+
+
