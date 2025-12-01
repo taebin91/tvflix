@@ -785,7 +785,7 @@ document.addEventListener('keydown', (e) => {
     if (host === mainPageUrl ) {
       // 안드로이드 네이티브 함수 호출
       if (window.Android && typeof Android.finishApp === "function") {
-        Android.finishApp();
+        NativeApp.finishApp();
       } else {
         history.back();
       }
