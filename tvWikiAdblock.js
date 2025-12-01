@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020841";
+const scriptVersion = "2512020852";
 
 
 (function() {
@@ -496,6 +496,7 @@ const scriptVersion = "2512020841";
   // =======================================================
   window.handleBackButton = function() {
 
+    NativeApp.jsLog("js handlebackbutton 실행");
     // 1. 검색창에서 ESC, 뒤로가기 눌렀을 때 동작
     const isSearchLayerOpen = document.querySelector('.search_layer.active') !== null;// 검색창이 활성화 상태인지 여부 (true / false)
 
@@ -520,7 +521,7 @@ const scriptVersion = "2512020841";
       return;
     }
 
-
+    NativeApp.jsLog("js handlebackbutton 실행2");
     // 2. 드롭다운 선택중 ESC, 뒤로가기 눌렀을 때 동작
     const layer = document.querySelector('.filter_layer');
     if (!layer) return;
@@ -542,6 +543,8 @@ const scriptVersion = "2512020841";
       NativeApp.jsLog("드롭다운 닫고 반환");
       return;
     }
+
+    NativeApp.jsLog("js handlebackbutton 실행3");
 
 
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
