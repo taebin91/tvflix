@@ -630,7 +630,7 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.left = `${rect.left + window.scrollX}px`;
     focusOverlay.style.width = `${rect.width}px`;
     focusOverlay.style.height = `${rect.height + 20}px`;
-    focusOverlay.style.color = '#000';
+    focusOverlay.style.color = '#FFF';
     focusOverlay.style.fontWeight = 'bold';
 
     // 🔸 연한 갈색 배경으로 변경
