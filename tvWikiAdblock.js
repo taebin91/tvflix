@@ -613,8 +613,8 @@
 });
 
 
+//특수 포커스
 let focusOverlay = null;
-
 document.addEventListener('focusin', (e) => {
     const target = e.target.closest && e.target.closest('.title, .title2', 'li.title on');
     if (!target) return;
@@ -663,7 +663,6 @@ document.addEventListener('focusin', (e) => {
 
     document.body.appendChild(focusOverlay);
 });
-
 document.addEventListener('focusout', (e) => {
     const el = e.target;
 
@@ -677,8 +676,8 @@ document.addEventListener('focusout', (e) => {
     }
 });
 
-// btn_search 요소 찾기
-const btnSearch = document.querySelector('a.btn_search');
+// 페이지 첫 시작시 검색 버튼 (btn_search 요소)로 포커스
+const btnSearch = document.querySelector('body');
 
 if (btnSearch) {
     btnSearch.focus({ preventScroll: false }); // 화면 스크롤 이동 허용
