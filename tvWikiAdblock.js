@@ -532,7 +532,7 @@ const mainPageUrl = "tvwiki4.net";
 
 
 
-    window.function testFunc() {
+    window.textFunc = function() {
     NativeApp.jsLog("함수 테스트");
   }
 
