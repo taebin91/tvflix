@@ -13,6 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
+const scriptVersion = "2512020829";
 
 
 (function() {
@@ -546,12 +547,10 @@ const mainPageUrl = "tvwiki4.net";
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
     if (host === mainPageUrl ) {
-      // 안드로이드 네이티브 함수 호출
-      if (window.Android && typeof Android.finishApp === "function") {
-        Android.finishApp();
-      } else {
-        history.back();
-      }
+      NativeApp.finishApp();
+    }
+    else {
+      history.back();
     }
   }
 
@@ -801,4 +800,4 @@ document.addEventListener('keydown', (e) => {
 
 
 
-NativeApp.jsLog("[kotlin]유저스크립트 version: 2512020804");
+NativeApp.jsLog("[kotlin]유저스크립트 version: " + scriptVersion);
