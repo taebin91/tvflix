@@ -616,7 +616,7 @@
 let focusOverlay = null;
 
 document.addEventListener('focusin', (e) => {
-    const target = e.target.closest && e.target.closest('.title, .title2');
+    const target = e.target.closest && e.target.closest('.title, .title2', 'li.title on');
     if (!target) return;
 
     const rect = target.getBoundingClientRect();
@@ -677,5 +677,11 @@ document.addEventListener('focusout', (e) => {
     }
 });
 
+// btn_search 요소 찾기
+const btnSearch = document.querySelector('a.btn_search');
+
+if (btnSearch) {
+    btnSearch.focus({ preventScroll: false }); // 화면 스크롤 이동 허용
+}
 
 
