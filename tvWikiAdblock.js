@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021249";
+const scriptVersion = "2512021253";
 
 
 (function() {
@@ -774,7 +774,7 @@ document.addEventListener('keydown', (e) => {
 
 
         }
-    } else if (active.closest('.filter_layer')) {
+    } else if (active.closest('.filter_layer, .filter2_layer')) {
         if (e.key === 'ArrowDown') {
             const next = active.nextElementSibling;
             if (next) next.focus();
