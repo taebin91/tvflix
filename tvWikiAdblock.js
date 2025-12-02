@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021016";
+const scriptVersion = "2512021023";
 
 
 (function() {
@@ -201,6 +201,15 @@ const scriptVersion = "2512021016";
           width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
           height: 60px !important;
       `;
+
+      // 포커스/호버 효과 추가
+      playButton.onmouseover = playButton.onfocus = function() {
+          this.style.backgroundColor = '#552E00'; // 더 밝은 빨강
+      };
+      playButton.onmouseout = playButton.onblur = function() {
+          this.style.backgroundColor = '#552E00'; // 원래 빨강
+      };
+
 
       // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
       playButton.onclick = function(e) {
@@ -392,7 +401,6 @@ const scriptVersion = "2512021016";
 
 
 
-
       /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
       #header_wrap #header #tnb ul li {
           float: none !important;
@@ -458,6 +466,12 @@ const scriptVersion = "2512021016";
       }
   `;
   document.head.appendChild(style);
+  console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
+
+
+
+
+
 
 
 
@@ -711,6 +725,9 @@ document.addEventListener('focusin', (e) => {
     focusOverlay.style.transition = 'outline-color 0.2s, box-shadow 0.2s';
 
     document.body.appendChild(focusOverlay);
+
+    NativeApp.jsLog(target.id + "포커스 특수효과 시작");
+
 });
 document.addEventListener('focusout', (e) => {
     const el = e.target;
