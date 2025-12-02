@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021242";
+const scriptVersion = "2512021249";
 
 
 (function() {
@@ -506,7 +506,7 @@ const scriptVersion = "2512021242";
       if (isOpen) {
         layer2.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
         // 원래 버튼으로 포커스 복귀
-        const btn = document.querySelector('.filter2.btn_filter');
+        const btn = document.querySelector('.filter2 .btn_filter');
         btn.focus();
         btn.click();
         e.preventDefault();
@@ -526,7 +526,7 @@ const scriptVersion = "2512021242";
       if (isOpen) {
         layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
         // 원래 버튼으로 포커스 복귀
-        const btn = document.querySelector('.btn_filter');
+        const btn = document.querySelector('.filter .btn_filter');
         btn.focus();
         btn.click();
         e.preventDefault();
