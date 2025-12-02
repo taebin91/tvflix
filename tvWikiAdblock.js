@@ -174,49 +174,58 @@ const scriptVersion = "2512021253";
   }
 
   // 재생 페이지'.bo_v_mov'에 '동영상 재생하기' 버튼 추가 및 스타일 적용
-  document.querySelectorAll('div.bo_v_mov').forEach(container => {
-      // "동영상 재생하기" 버튼 생성
-      const playButton = document.createElement('button');
-      playButton.textContent = '▶️ 재생';
-      playButton.className = 'tvflix-play-button'; // 식별자 클래스 추가
-
-      // 버튼 스타일 강제 적용 (Netflix 스타일) - 폰트 크기 증가 및 가로 길이 축소 반영
-      playButton.style.cssText = `
-          background-color: #e50914 !important;
-          color: white !important;
-          padding: 10px 15px !important; /* 패딩 조정 */
-          border: none !important;
-          border-radius: 4px !important;
-          font-size: 24px !important; /* 폰트 크기 증가 */
-          cursor: pointer !important;
-          font-weight: bold !important;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
-          transition: background-color 0.2s !important;
-          width: 180px !important; /* 가로 길이 축소 및 강제 설정 */
-          height: 60px !important;
-      `;
-
-      // 포커스/호버 효과 추가
-      playButton.onmouseover = playButton.onfocus = function() {
-          this.style.backgroundColor = '#552E00'; // 더 밝은 빨강
-      };
-      playButton.onmouseout = playButton.onblur = function() {
-          this.style.backgroundColor = '#552E00'; // 원래 빨강
-      };
+document.querySelectorAll('div.bo_v_mov').forEach(container => {
+    // 새로운 컨테이너 생성
+    const overlay = document.createElement('div');
+    overlay.className = 'bo_v_mov_overlay';
 
 
-      // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
-      playButton.onclick = function(e) {
-          e.preventDefault();
-          // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
-          // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
-          if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
-              NativeApp.handlePlayButtonClick();
-          }
-      };
-      // 컨테이너에 버튼 추가
-      container.appendChild(playButton);
-  });
+    // overlay 스타일 수정
+    overlay.style.position = 'relative';
+    overlay.style.width = '100%';
+    overlay.style.height = '320px';
+    overlay.style.marginTop = '120px';
+
+    // **가운데 정렬**
+    overlay.style.display = 'flex';
+    //overlay.style.alignItems = 'center';     // 세로 중앙
+    overlay.style.justifyContent = 'center'; // 가로 중앙
+
+    // 버튼 생성
+    const playButton = document.createElement('button');
+    playButton.textContent = '▶ 재생';
+    playButton.style.cssText = `
+        background-color: #e50914;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        width: 180px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+    overlay.appendChild(playButton);
+    container.insertAdjacentElement('afterend', overlay);
+
+    // 컨테이너 높이가 변하면 overlay도 자동 조정
+    const adjustHeight = () => {
+        overlay.style.height = `${container.getBoundingClientRect().height}px`;
+    };
+    const observer = new MutationObserver(adjustHeight);
+    observer.observe(container, { attributes: true, childList: true, subtree: true });
+
+    // 클릭 이벤트
+    playButton.onclick = () => {
+        if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
+            NativeApp.handlePlayButtonClick();
+        }
+    };
+});
   // =======================================================
 
 
@@ -231,7 +240,6 @@ const scriptVersion = "2512021253";
   // D-Pad 포커스 테두리 (Outline) 스타일 개선 및 UI 조정 CSS
   const style = document.createElement('style');
   style.innerHTML = `
-
       /* 🚨 [위치 최종 수정] 커스텀 알림 모달 스타일: 뷰포트 고정(Fixed) 및 중앙 정렬 */
       .custom-alert-backdrop {
           position: fixed !important; /* 뷰포트에 고정되어 스크롤 시 따라옴 */
@@ -769,10 +777,6 @@ document.addEventListener('keydown', (e) => {
             first?.focus();
             e.preventDefault();
           }
-          //드롭다운이 닫혀있을때
-          //일단 아무것도 안함
-
-
         }
     } else if (active.closest('.filter_layer, .filter2_layer')) {
         if (e.key === 'ArrowDown') {
@@ -786,11 +790,6 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
-
-
-
-
-
 
 
 NativeApp.jsLog("[kotlin]유저스크립트 version: " + scriptVersion);
