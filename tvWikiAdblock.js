@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021344";
+const scriptVersion = "2512021253";
 
 
 (function() {
@@ -183,8 +183,8 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
     // overlay 스타일 수정
     overlay.style.position = 'relative';
     overlay.style.width = '100%';
-    overlay.style.height = '160px';
-    overlay.style.marginTop = '80px';
+    overlay.style.height = '320px';
+    overlay.style.marginTop = '120px';
 
     // **가운데 정렬**
     overlay.style.display = 'flex';
@@ -380,6 +380,12 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
           line-height: 1.2 !important;
           font-size: 19px !important;
       }
+
+      .bo_v_mov{
+        background.color = black;
+
+      }
+
       /* =========================================================== */
 
 
@@ -416,7 +422,7 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
       /* [NEW FEATURE] .bo_v_mov 크기를 버튼에 맞게 강제 축소 및 중앙 정렬 */
       .bo_v_mov {
           width: 100% !important;
-          height: 80px !important; /* 버튼이 들어갈 높이로 강제 축소 */
+          height: 0px !important; /* 버튼이 들어갈 높이로 강제 축소 */
           display: flex !important;
           justify-content: center !important; /* 중앙 정렬 */
           align-items: center !important; /* 중앙 정렬 */
