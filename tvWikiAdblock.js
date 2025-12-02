@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020857";
+const scriptVersion = "2512020905";
 
 
 (function() {
@@ -524,32 +524,33 @@ const scriptVersion = "2512020857";
     NativeApp.jsLog("js handlebackbutton 실행2");
     // 2. 드롭다운 선택중 ESC, 뒤로가기 눌렀을 때 동작
     const layer = document.querySelector('.filter_layer');
-    if (!layer) return;
-    const computed = window.getComputedStyle(layer);
-    const hasActiveClass = layer.classList && layer.classList.contains('active');
-    const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
-    const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
-    const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
-    const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
+    if (layer) {
+      const computed = window.getComputedStyle(layer);
+      const hasActiveClass = layer.classList && layer.classList.contains('active');
+      const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
+      const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
+      const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
+      const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
 
-    NativeApp.jsLog("js handlebackbutton 실행2.1");
+      NativeApp.jsLog("js handlebackbutton 실행2.1");
 
-    if (isOpen) {
-      NativeApp.jsLog("js handlebackbutton 실행2.2");
-      layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
-      // 원래 버튼으로 포커스 복귀
-      const btn = document.querySelector('.filter_layer');
-      btn.focus();
-      btn.click();
-      e.preventDefault();
-      e.stopPropagation();
-      NativeApp.jsLog("js handlebackbutton 실행2.3");
-      NativeApp.jsLog("드롭다운 닫고 반환");
-      return;
+      if (isOpen) {
+        NativeApp.jsLog("js handlebackbutton 실행2.2");
+        layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
+        // 원래 버튼으로 포커스 복귀
+        const btn = document.querySelector('.filter_layer');
+        btn.focus();
+        btn.click();
+        e.preventDefault();
+        e.stopPropagation();
+        NativeApp.jsLog("js handlebackbutton 실행2.3");
+        NativeApp.jsLog("드롭다운 닫고 반환");
+        return;
+      }
+
     }
 
     NativeApp.jsLog("js handlebackbutton 실행3");
-
 
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
