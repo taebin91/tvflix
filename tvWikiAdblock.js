@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021253";
+const scriptVersion = "2512021501";
 
 
 (function() {
@@ -183,8 +183,8 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
     // overlay 스타일 수정
     overlay.style.position = 'relative';
     overlay.style.width = '100%';
-    overlay.style.height = '320px';
-    overlay.style.marginTop = '120px';
+    overlay.style.height = '220px';
+    overlay.style.marginTop = '140px';
 
     // **가운데 정렬**
     overlay.style.display = 'flex';
