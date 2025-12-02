@@ -183,8 +183,8 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
     // overlay 스타일 수정
     overlay.style.position = 'relative';
     overlay.style.width = '100%';
-    overlay.style.height = '220px';
-    overlay.style.marginTop = '140px';
+    overlay.style.height = '230px';
+    overlay.style.marginTop = '145px';
 
     // **가운데 정렬**
     overlay.style.display = 'flex';
