@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021002";
+const scriptVersion = "2512021009";
 
 
 (function() {
@@ -149,7 +149,6 @@ const scriptVersion = "2512021002";
       const img = li.querySelector('img');
       if (img) {
           img.remove();
-          console.log('이미지 제거 완료:', img);
       }
   });
   // =======================================================
@@ -176,9 +175,8 @@ const scriptVersion = "2512021002";
       // 2. 폰트 크기를 인라인 스타일로 강제 적용 (가장 높은 우선순위)
       searchLabel.style.setProperty('font-size', '24px', 'important'); // <<-- 최종 폰트 크기 강제 적용
 
-      // 3. 버튼 아이콘 앞에 텍스트 추가
+    // 3. 버튼 아이콘 앞에 텍스트 추가
       searchButton.prepend(searchLabel);
-      console.log('Added "검색하기" text to the search button with inline style overwrite.');
   }
 
   // 재생 페이지'.bo_v_mov'에 '동영상 재생하기' 버튼 추가 및 스타일 적용
@@ -590,6 +588,10 @@ const scriptVersion = "2512021002";
   const button = document.querySelector('a.btn.btn_normal');
   if (button) {
       button.click();
+  }
+  else
+    {
+     focus('');
   }
 
 
