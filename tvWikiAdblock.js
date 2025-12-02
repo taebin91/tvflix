@@ -87,7 +87,6 @@ const scriptVersion = "2512021023";
       const headerWrap = document.getElementById('header_wrap');
       if (headerWrap) {
           headerWrap.remove();
-          console.log('Conditional: Removed #header_wrap because this is a sub-sub page.');
       }
   } else {
       // 메인 페이지 또는 서브페이지일 때 실행
@@ -102,7 +101,6 @@ const scriptVersion = "2512021023";
           const parent = headerElement.parentElement;
           parent.style.display = 'flex';
           parent.style.alignItems = 'center';
-          console.log('Flexbox를 이용해 #header를 수직 중앙 정렬했습니다.');
       }
   }
 
@@ -111,7 +109,6 @@ const scriptVersion = "2512021023";
       // 정규 표현식을 사용하여 모든 '다시보기' 문자열을 빈 문자열로 대체하고 앞뒤 공백 제거
       if (element.textContent.includes('다시보기')) {
           element.textContent = element.textContent.replace(/다시보기/g, '').trim();
-          console.log('Removed "다시보기" text from .bo_v_tit.');
       }
   });
 
@@ -119,7 +116,6 @@ const scriptVersion = "2512021023";
   const firstSlideWrap = document.querySelector('.slide_wrap');
   if (firstSlideWrap) {
       firstSlideWrap.remove();
-      console.log('Removed the first .slide_wrap element.');
   }
   // 남은 Slide Wrap 제목 변경 로직
   const slideWraps = document.querySelectorAll('.slide_wrap');
@@ -133,10 +129,8 @@ const scriptVersion = "2512021023";
 
               if (moreLink) {
                   h2.innerHTML = `${newTitleText}${moreLink.outerHTML}`;
-                  console.log(`Updated slide wrap title #${index + 2} to: ${newTitleText}`);
               } else {
                   h2.textContent = newTitleText;
-                  console.log(`Updated slide wrap title #${index + 2} (no link found) to: ${newTitleText}`);
               }
           }
       }
@@ -218,7 +212,6 @@ const scriptVersion = "2512021023";
           // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
           if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
               NativeApp.handlePlayButtonClick();
-              console.log('Called NativeApp.handlePlayButtonClick() on native side.');
           }
       };
       // 컨테이너에 버튼 추가
@@ -466,11 +459,7 @@ const scriptVersion = "2512021023";
       }
   `;
   document.head.appendChild(style);
-  console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
-
-
-
-
+  
 
 
 
@@ -613,18 +602,9 @@ const scriptVersion = "2512021023";
         // 이미 모달이 떠 있다면 새 모달을 띄우지 않음 (중첩 방지)
         if (document.querySelector('.custom-alert-backdrop')) {
             console.warn('Attempted to show multiple alerts. Skipping new alert.');
-
-
 			if (typeof NativeApp !== 'undefined' && NativeApp.showNeutralAlert) {
                 NativeApp.showNeutralAlert(String(message));
-                console.log('Called NativeApp.handlePlayButtonClick() on native side.');
-            } else {
-                console.warn('NativeApp interface (handlePlayButtonClick) not found.');
             }
-
-
-
-
             return isConfirm ? false : undefined;
         }
     }
