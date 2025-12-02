@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021106";
+const scriptVersion = "2512021242";
 
 
 (function() {
@@ -65,7 +65,7 @@ const scriptVersion = "2512021106";
   // 2. UI 요소 제거
   // =======================================================
   const elementsToRemove = [
-      '.notice', '.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
+      'div.notice', 'a.logo', '.gnb_mobile', '.top_btn', '.profile_info_ct',
       '.ep_search', '.good', '.emer-content', '#bo_v_atc', '.cast',
       '.view-comment-area', '.over', '#bo_v_act', '#bo_vc', '#float',
       'div.notice', 'ul.banner2', 'li.full.pc-only', 'li.full.mobile-only',
@@ -495,6 +495,26 @@ const scriptVersion = "2512021106";
 
 
     // 2. 드롭다운 선택중 ESC, 뒤로가기 눌렀을 때 동작
+    const layer2 = document.querySelector('.filter2_layer');
+    if (layer2) {
+      const computed = window.getComputedStyle(layer2);
+      const hasActiveClass = layer2.classList && layer2.classList.contains('active');
+      const displayVisible = (layer2.style.display && layer2.style.display !== 'none') || (computed.display && computed.display !== 'none');
+      const visibilityVisible = (layer2.style.visibility && layer2.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
+      const offscreen = layer2.style.left && (layer2.style.left === '-9999px' || layer2.style.left.indexOf('-') === 0);
+      const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
+      if (isOpen) {
+        layer2.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
+        // 원래 버튼으로 포커스 복귀
+        const btn = document.querySelector('.filter2.btn_filter');
+        btn.focus();
+        btn.click();
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+    }
+
     const layer = document.querySelector('.filter_layer');
     if (layer) {
       const computed = window.getComputedStyle(layer);
@@ -513,8 +533,11 @@ const scriptVersion = "2512021106";
         e.stopPropagation();
         return;
       }
-
     }
+
+
+
+
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
     const path = window.location.pathname.replace(/\/$/, ""); // 끝의 / 제거
@@ -660,10 +683,10 @@ const scriptVersion = "2512021106";
 let focusOverlay = null;
 
 document.addEventListener('focusin', (e) => {
-    const target = e.target.closest && e.target.closest('.title, .title2, .filter_layer a, .searchText a');
+    const target = e.target.closest && e.target.closest('.title, .title2, .filter_layer a, .filter2_layer a');
     if (!target) return;
 
-    const isDropDownItem = e.target.closest('.filter_layer a');
+    const isDropDownItem = e.target.closest('.filter_layer a, .filter2_layer a');
     const rect = target.getBoundingClientRect();
 
     // 원본 투명화
