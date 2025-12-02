@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020905";
+const scriptVersion = "2512020956";
 
 
 (function() {
@@ -789,9 +789,23 @@ document.addEventListener('keydown', (e) => {
         if (!layer) return;
 
         if (e.key === 'ArrowDown') {
+
+          //드롭다운이 열려있을때
+          const computed = window.getComputedStyle(layer);
+          const hasActiveClass = layer.classList && layer.classList.contains('active');
+          const displayVisible = (layer.style.display && layer.style.display !== 'none') || (computed.display && computed.display !== 'none');
+          const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
+          const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
+          const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
+          if (isOpen) {
             const first = layer.querySelector('a');
             first?.focus();
             e.preventDefault();
+          }
+          //드롭다운이 닫혀있을때
+          //일단 아무것도 안함
+
+
         }
     } else if (active.closest('.filter_layer')) {
         if (e.key === 'ArrowDown') {
