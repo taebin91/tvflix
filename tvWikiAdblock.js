@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512021009";
+const scriptVersion = "2512021016";
 
 
 (function() {
@@ -202,32 +202,18 @@ const scriptVersion = "2512021009";
           height: 60px !important;
       `;
 
-      // 포커스/호버 효과 추가
-      playButton.onmouseover = playButton.onfocus = function() {
-          this.style.backgroundColor = '#552E00'; // 더 밝은 빨강
-      };
-      playButton.onmouseout = playButton.onblur = function() {
-          this.style.backgroundColor = '#552E00'; // 원래 빨강
-      };
-
-
       // [수정된 기능] 클릭 시 Kotlin 네이티브 함수 호출
       playButton.onclick = function(e) {
           e.preventDefault();
-          console.log('동영상 재생하기 버튼 클릭됨.');
-
           // NativeApp 객체가 WebView에 바인딩되어 있는지 확인하고 함수를 호출합니다.
           // 이 호출은 Kotlin의 handlePlayButtonClick() 메서드를 실행합니다.
           if (typeof NativeApp !== 'undefined' && NativeApp.handlePlayButtonClick) {
               NativeApp.handlePlayButtonClick();
               console.log('Called NativeApp.handlePlayButtonClick() on native side.');
-          } else {
-              console.warn('NativeApp interface (handlePlayButtonClick) not found.');
           }
       };
       // 컨테이너에 버튼 추가
       container.appendChild(playButton);
-      console.log('Added "동영상 재생하기" button to .bo_v_mov.');
   });
   // =======================================================
 
@@ -404,13 +390,7 @@ const scriptVersion = "2512021009";
           transition: outline-color 0.2s, box-shadow 0.2s;
       }
 
-      /* iFrame 포커스 스타일 제거 및 시각적으로 숨기기 */
-      iframe:focus {
-          outline: none !important;
-          box-shadow: none !important;
-          position: static !important;
-          z-index: auto !important;
-      }
+
 
 
       /* [NEW FIX: 부모 li 확장] #tnb 내부의 li에 걸린 고정 크기 및 float를 해제하여 버튼이 확장할 공간을 확보 */
@@ -478,12 +458,6 @@ const scriptVersion = "2512021009";
       }
   `;
   document.head.appendChild(style);
-  console.log('Focus style, btn_search layout, iframe hiding, and .bo_v_mov resizing applied.');
-
-
-
-
-
 
 
 
@@ -588,17 +562,8 @@ const scriptVersion = "2512021009";
   const button = document.querySelector('a.btn.btn_normal');
   if (button) {
       button.click();
+    NativeApp.jsLog("플레이어 재생 페이지 자동 넘기기 실행");
   }
-  else
-    {
-     focus('');
-  }
-
-
-
-
-
-
 })();
 
 
