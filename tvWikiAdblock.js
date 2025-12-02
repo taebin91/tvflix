@@ -195,7 +195,7 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
     const playButton = document.createElement('button');
     playButton.textContent = '▶ 재생';
     playButton.style.cssText = `
-        background-color: #e50914;
+        background-color: #ff0000;
         color: white;
         border: none;
         border-radius: 4px;
@@ -473,10 +473,6 @@ document.querySelectorAll('div.bo_v_mov').forEach(container => {
       }
   `;
   document.head.appendChild(style);
-
-
-
-
 
 
 
