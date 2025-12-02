@@ -13,7 +13,7 @@
 
 
 const mainPageUrl = "tvwiki4.net";
-const scriptVersion = "2512020956";
+const scriptVersion = "2512021002";
 
 
 (function() {
@@ -494,9 +494,8 @@ const scriptVersion = "2512020956";
   // =======================================================
   // 6. 커스텀 함수
   // =======================================================
-  window.handleBackButton = function() {
 
-    NativeApp.jsLog("js handlebackbutton 실행");
+  window.handleBackButton = function() {
     // 1. 검색창에서 ESC, 뒤로가기 눌렀을 때 동작
     const isSearchLayerOpen = document.querySelector('.search_layer.active') !== null;// 검색창이 활성화 상태인지 여부 (true / false)
 
@@ -514,14 +513,12 @@ const scriptVersion = "2512020956";
       if (btn) {
           btn.focus();
       }
-
       e.preventDefault();
       e.stopPropagation();
-      NativeApp.jsLog("검색창 닫고 받환");
       return;
     }
 
-    NativeApp.jsLog("js handlebackbutton 실행2");
+
     // 2. 드롭다운 선택중 ESC, 뒤로가기 눌렀을 때 동작
     const layer = document.querySelector('.filter_layer');
     if (layer) {
@@ -531,36 +528,23 @@ const scriptVersion = "2512020956";
       const visibilityVisible = (layer.style.visibility && layer.style.visibility !== 'hidden') || (computed.visibility && computed.visibility !== 'hidden');
       const offscreen = layer.style.left && (layer.style.left === '-9999px' || layer.style.left.indexOf('-') === 0);
       const isOpen = hasActiveClass || (displayVisible && visibilityVisible && !offscreen);
-
-      NativeApp.jsLog("js handlebackbutton 실행2.1");
-
       if (isOpen) {
-        NativeApp.jsLog("js handlebackbutton 실행2.2");
         layer.classList.remove('active');// 닫기: 사이트가 어떤 방식으로 열어놨든 안전하게 닫도록 여러 속성 설정
         // 원래 버튼으로 포커스 복귀
-        const btn = document.querySelector('.filter_layer');
+        const btn = document.querySelector('.btn_filter');
         btn.focus();
         btn.click();
         e.preventDefault();
         e.stopPropagation();
-        NativeApp.jsLog("js handlebackbutton 실행2.3");
-        NativeApp.jsLog("드롭다운 닫고 반환");
         return;
       }
 
     }
-
-    NativeApp.jsLog("js handlebackbutton 실행3");
-
     //3. 검색창이나 드롭다운 활성화 상태가 아닌 경우
     const host = location.hostname.replace(/^www\./, "");
     const path = window.location.pathname.replace(/\/$/, ""); // 끝의 / 제거
-
     // 메인 페이지는 path가 빈 문자열 또는 '/'로 간주
     const isMainPage = host === mainPageUrl && (path === "" || path === "/");
-
-    NativeApp.jsLog(`host: ${host}, path: ${path}, isMainPage: ${isMainPage}`);
-
     if (isMainPage) {
         NativeApp.finishApp();
     } else {
